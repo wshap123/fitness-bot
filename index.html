@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1210" />
+  <title>Bennie — Will’s fitness coach</title>
+  <style>
+    :root {
+      --bg: #0a1210;
+      --bg-elevated: #111a17;
+      --surface: #16231f;
+      --border: #1f332c;
+      --text: #e8f5ef;
+      --text-muted: #8fb3a4;
+      --accent: #22c55e;
+      --accent-dim: #166534;
+      --accent-glow: rgba(34, 197, 94, 0.25);
+      --danger: #f87171;
+      --radius: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      height: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    }
+
+    header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--bg-elevated), var(--bg));
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .brand p {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .week-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-end;
+    }
+
+    .week-field label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .week-field input {
+      width: 52px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.97);
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .row {
+      display: flex;
+      width: 100%;
+    }
+
+    .row.user {
+      justify-content: flex-end;
+    }
+
+    .row.assistant {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: min(88%, 380px);
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .row.user .bubble {
+      background: linear-gradient(145deg, #14532d, var(--accent-dim));
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 8px 24px var(--accent-glow);
+      border-bottom-right-radius: 6px;
+    }
+
+    .row.assistant .bubble {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 6px;
+    }
+
+    .meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding: 0 4px;
+      margin-top: -4px;
+    }
+
+    .row.user + .meta {
+      text-align: right;
+    }
+
+    .composer {
+      flex-shrink: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--border);
+      background: rgba(10, 18, 16, 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .composer-inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 6px 6px 6px 12px;
+    }
+
+    textarea {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.4;
+      resize: none;
+      max-height: 120px;
+      min-height: 24px;
+      padding: 8px 0;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      outline: none;
+    }
+
+    .send {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(145deg, #16a34a, var(--accent));
+      color: #052e16;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .send:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .typing {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 2px;
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.35; }
+      40% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(88px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(12px);
+      background: #1c1917;
+      color: #fef3c7;
+      border: 1px solid #44403c;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      max-width: min(90%, 360px);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error {
+      color: #fee2e2;
+      border-color: #7f1d1d;
+      background: #450a0a;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      background: var(--bg-elevated);
+      color: var(--text);
+      width: min(92vw, 400px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .modal-body {
+      padding: 18px 18px 14px;
+    }
+
+    .modal-body h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .modal-body p {
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .modal-body input[type="password"],
+    .modal-body input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding: 0 18px 16px;
+    }
+
+    .btn {
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn.primary {
+      background: linear-gradient(145deg, #16a34a, var(--accent));
+      border-color: transparent;
+      color: #052e16;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1>Bennie</h1>
+        <p>Will’s fitness coach</p>
+      </div>
+      <div class="header-actions">
+        <div class="week-field">
+          <label for="weekInput">Week</label>
+          <input id="weekInput" type="number" min="1" step="1" value="1" inputmode="numeric" />
+        </div>
+        <button type="button" class="icon-btn" id="settingsBtn" title="API key">⚙</button>
+      </div>
+    </header>
+
+    <div class="messages" id="messages" aria-live="polite"></div>
+
+    <form class="composer" id="composer">
+      <div class="composer-inner">
+        <textarea id="input" rows="1" placeholder="Message Bennie…" autocomplete="off"></textarea>
+        <button type="submit" class="send" id="sendBtn" aria-label="Send">➤</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <dialog id="settingsDialog">
+    <div class="modal-body">
+      <h2>Anthropic API key</h2>
+      <p>Stored only in this browser (localStorage). Never shared with a server except Anthropic’s API from your device.</p>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api…" autocomplete="off" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="cancelSettings">Cancel</button>
+      <button type="button" class="btn primary" id="saveSettings">Save</button>
+    </div>
+  </dialog>
+
+  <script>
+    const ANTHROPIC_MODEL = "claude-sonnet-4-5";
+    const SUPABASE_URL = "https://bhtuxfvnvcjivkuhubfr.supabase.co";
+    const SUPABASE_ANON =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHV4ZnZudmNqaXZrdWh1YmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNjk3NzksImV4cCI6MjA5Mzg0NTc3OX0.aya7us9oNmFPbxqPAN2-yv5xBFi24SB1ND7bHdfw2gI";
+
+    const SYSTEM_PROMPT = `You are Bennie, Will's personal fitness coach. You know his exact workout 
+program:
+
+MONDAY - Lower Body Power:
+Strength: Tonal Squat 3x3-5 (heavy), KB RDL 3x6-8, Hip Thrust 3x8-10
+MetCon: 8 min AMRAP - KB Swing x15, DB Goblet Squat Pulse x12, 
+DB Bulgarian Split Squat x8/leg, Goblet Squat x12
+Cardio: 25 min Zone 2 run
+
+TUESDAY - Run + LeoMoves:
+Zone 2 easy aerobic run 25-30 min, LeoMoves mobility work
+
+WEDNESDAY - Upper Push/Pull:
+Strength: DB Bench Press 3x4-6, Pull-Ups 3x Fail-2, DB OHP 3x6-8
+MetCon: 8 min AMRAP - Tonal Face Pull x15, DB Lateral Raise x12, 
+DB Hammer Curl x12, Tonal Row x10
+Cardio: 25 min Intervals (1 min hard / 2 min easy x8)
+
+THURSDAY - Run + LeoMoves:
+Intervals run - push effort, LeoMoves mobility work
+
+FRIDAY - Full Body Functional:
+Strength: KB Deadlift 3x4-6, Weighted Pull-Ups 3x4-6, DB Bench 3x6-8
+MetCon: 10 min AMRAP - Tonal Hip Thrust x10, KB Clean & Press x5/side, 
+KB Swing x15, Plank-to-Push-Up x10
+Cardio: 20-30 min Zone 2 or easy run
+
+SATURDAY - Pilates (active recovery, core, flexibility)
+
+SUNDAY - Long Run + LeoMoves (easy pace, build distance)
+
+WEEK 4 IS ALWAYS DELOAD: same weight, drop to 2 sets, MetCon 1 round only.
+
+When Will tells you what workout he completed, extract: exercise name, 
+sets, reps, weight in lbs, and any notes. Confirm back what you logged. 
+Be encouraging but concise. When asked what today's workout is, check 
+the day and give him the full workout step by step. You're texting someone you've coached for a while — keep it casual and familiar, no formal intros. Your name is Bennie if it comes up naturally.
+
+You have a tool named log_workout_entry. Whenever Will reports completed work with enough detail to log (exercise plus any of sets, reps, weight, or notes), you MUST call log_workout_entry once per exercise. Use the training week and calendar context provided in the bracketed prefix of Will's messages. If week is unknown, use the configured training week from that prefix. For day, use the calendar day name from that prefix unless Will explicitly says otherwise. Coerce numeric fields when possible; use null for unknown numbers. Put qualitative rep schemes (e.g. AMRAP rounds) in notes if they do not map to reps.`;
+
+    const LOG_TOOL = {
+      name: "log_workout_entry",
+      description:
+        "Insert one row into Will's workout_logs table in Supabase. Call once per distinct exercise logged.",
+      input_schema: {
+        type: "object",
+        properties: {
+          day: {
+            type: "string",
+            description: "Calendar day name, e.g. Monday",
+          },
+          week: {
+            type: "integer",
+            description: "Training week number (positive integer)",
+          },
+          exercise: {
+            type: "string",
+            description: "Exercise name",
+          },
+          sets: {
+            type: "integer",
+            description: "Number of sets completed (omit if unknown)",
+          },
+          reps: {
+            type: "string",
+            description: "Reps as text (ranges, AMRAP totals, etc.); omit if unknown",
+          },
+          weight_lbs: {
+            type: "number",
+            description: "Weight in pounds if applicable; omit if unknown or bodyweight",
+          },
+          notes: {
+            type: "string",
+            description: "Other notes (effort, substitutions, pain, etc.)",
+          },
+        },
+        required: ["exercise", "day", "week"],
+      },
+    };
+
+    const messagesEl = document.getElementById("messages");
+    const composer = document.getElementById("composer");
+    const input = document.getElementById("input");
+    const sendBtn = document.getElementById("sendBtn");
+    const toastEl = document.getElementById("toast");
+    const weekInput = document.getElementById("weekInput");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const settingsDialog = document.getElementById("settingsDialog");
+    const apiKeyInput = document.getElementById("apiKeyInput");
+    const saveSettings = document.getElementById("saveSettings");
+    const cancelSettings = document.getElementById("cancelSettings");
+
+    const STORAGE_KEY = "anthropic_api_key";
+    const WEEK_KEY = "training_week";
+
+    function loadWeek() {
+      const v = localStorage.getItem(WEEK_KEY);
+      if (v != null && v !== "") weekInput.value = String(Math.max(1, parseInt(v, 10) || 1));
+    }
+
+    function saveWeek() {
+      const n = Math.max(1, parseInt(weekInput.value, 10) || 1);
+      weekInput.value = String(n);
+      localStorage.setItem(WEEK_KEY, String(n));
+    }
+
+    function getApiKey() {
+      return localStorage.getItem(STORAGE_KEY) || "";
+    }
+
+    function showToast(text, isError) {
+      toastEl.textContent = text;
+      toastEl.classList.toggle("error", !!isError);
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove("show"), 3200);
+    }
+
+    /** @type {{ role: string, content: unknown }[]} */
+    let apiHistory = [];
+
+    function appendBubble(role, text) {
+      const row = document.createElement("div");
+      row.className = `row ${role}`;
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function appendTyping() {
+      const row = document.createElement("div");
+      row.className = "row assistant";
+      row.id = "typingRow";
+      const bubble = document.createElement("div");
+      bubble.className = "bubble typing";
+      bubble.innerHTML = "<span></span><span></span><span></span>";
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function removeTyping() {
+      document.getElementById("typingRow")?.remove();
+    }
+
+    function formatContextPrefix() {
+      const now = new Date();
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const dayName = days[now.getDay()];
+      const iso = now.toISOString().slice(0, 10);
+      const week = Math.max(1, parseInt(weekInput.value, 10) || 1);
+      return `[Calendar: ${dayName} ${iso}. Configured training week: ${week}.]\n\n`;
+    }
+
+    async function insertWorkoutLog(row) {
+      const payload = {
+        day: row.day,
+        week: row.week,
+        exercise: row.exercise,
+        sets: row.sets ?? null,
+        reps: row.reps ?? null,
+        weight_lbs: row.weight_lbs ?? null,
+        notes: row.notes ?? null,
+      };
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/workout_logs`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${SUPABASE_ANON}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(errText || `Supabase error ${res.status}`);
+      }
+    }
+
+    async function callAnthropic(apiKey, body) {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg = data.error?.message || JSON.stringify(data) || res.statusText;
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    function extractTextBlocks(content) {
+      if (!Array.isArray(content)) return "";
+      return content
+        .filter((b) => b.type === "text")
+        .map((b) => b.text)
+        .join("\n\n")
+        .trim();
+    }
+
+    /**
+     * Run assistant turn(s) with tool loop; append visible assistant text bubbles.
+     */
+    async function runAssistantTurn(apiKey) {
+      let safety = 0;
+      while (safety++ < 12) {
+        const data = await callAnthropic(apiKey, {
+          model: ANTHROPIC_MODEL,
+          max_tokens: 4096,
+          system: SYSTEM_PROMPT,
+          tools: [LOG_TOOL],
+          messages: apiHistory,
+        });
+
+        apiHistory.push({ role: "assistant", content: data.content });
+
+        const text = extractTextBlocks(data.content);
+        if (text) appendBubble("assistant", text);
+
+        const toolUses = (data.content || []).filter((b) => b.type === "tool_use");
+        if (!toolUses.length) break;
+
+        const toolResults = [];
+        for (const tu of toolUses) {
+          let resultPayload;
+          try {
+            const input = tu.input || {};
+            const sets =
+              input.sets === undefined || input.sets === null || input.sets === ""
+                ? null
+                : Number.parseInt(String(input.sets), 10);
+            await insertWorkoutLog({
+              day: input.day,
+              week: input.week,
+              exercise: input.exercise,
+              sets: Number.isFinite(sets) ? sets : null,
+              reps: input.reps != null && input.reps !== "" ? String(input.reps) : null,
+              weight_lbs: (() => {
+                if (
+                  input.weight_lbs === undefined ||
+                  input.weight_lbs === null ||
+                  input.weight_lbs === ""
+                ) {
+                  return null;
+                }
+                const n = Number(input.weight_lbs);
+                return Number.isFinite(n) ? n : null;
+              })(),
+              notes: input.notes != null && input.notes !== "" ? String(input.notes) : null,
+            });
+            resultPayload = { ok: true, logged: input };
+          } catch (e) {
+            resultPayload = { ok: false, error: String(e && e.message ? e.message : e) };
+            showToast("Could not save to Supabase: " + resultPayload.error, true);
+          }
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: tu.id,
+            content: JSON.stringify(resultPayload),
+          });
+        }
+
+        apiHistory.push({ role: "user", content: toolResults });
+      }
+    }
+
+    composer.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const apiKey = getApiKey().trim();
+      if (!apiKey) {
+        settingsDialog.showModal();
+        showToast("Add your Anthropic API key in settings.", true);
+        return;
+      }
+
+      const raw = input.value.trim();
+      if (!raw) return;
+
+      saveWeek();
+      input.value = "";
+      input.style.height = "auto";
+
+      const userVisible = raw;
+      const userForModel = formatContextPrefix() + raw;
+
+      appendBubble("user", userVisible);
+      apiHistory.push({ role: "user", content: userForModel });
+
+      sendBtn.disabled = true;
+      appendTyping();
+      try {
+        await runAssistantTurn(apiKey);
+      } catch (err) {
+        showToast(String(err && err.message ? err.message : err), true);
+        appendBubble("assistant", "Something went wrong reaching Bennie. Check your API key and network, then try again.");
+      } finally {
+        removeTyping();
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    });
+
+    input.addEventListener("input", () => {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 120) + "px";
+    });
+
+    settingsBtn.addEventListener("click", () => {
+      apiKeyInput.value = getApiKey();
+      settingsDialog.showModal();
+      apiKeyInput.focus();
+    });
+
+    saveSettings.addEventListener("click", () => {
+      localStorage.setItem(STORAGE_KEY, apiKeyInput.value.trim());
+      settingsDialog.close();
+      showToast("API key saved in this browser.");
+    });
+
+    cancelSettings.addEventListener("click", () => settingsDialog.close());
+
+    weekInput.addEventListener("change", saveWeek);
+
+    loadWeek();
+    const openers = [
+      "Hey — what's the move today?",
+      "Yo, ready to work?",
+      "Morning — what are we hitting?",
+      "Alright, what's on deck?",
+    ];
+    appendBubble(
+      "assistant",
+      `${openers[Math.floor(Math.random() * openers.length)]}\n\nLog whatever you got done, ask for today's plan, whatever. Anthropic key's under ⚙ if you need it — stays in this browser only.`
+    );
+
+    if (!getApiKey()) {
+      setTimeout(() => settingsDialog.showModal(), 400);
+    }
+  </script>
+</body>
+</html>
