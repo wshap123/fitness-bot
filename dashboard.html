@@ -62,8 +62,7 @@
     .tab,
     .bottom-tab,
     .day-card,
-    .log-card,
-    .editor-card {
+    .history-row {
       transition: all 0.15s ease;
     }
 
@@ -167,14 +166,23 @@
 
     .panel {
       display: none;
+      flex-direction: column;
       height: 100%;
-      overflow-y: auto;
-      padding: 14px 12px calc(14px + 64px + env(safe-area-inset-bottom));
-      -webkit-overflow-scrolling: touch;
+      min-height: 0;
+      padding: 12px;
+      padding-bottom: calc(12px + 64px + env(safe-area-inset-bottom));
+      overflow: hidden;
     }
 
     .panel.active {
-      display: block;
+      display: flex;
+    }
+
+    .panel-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .panel-loading {
@@ -209,77 +217,66 @@
     }
 
     .week-label {
-      margin: 0;
-      padding: 16px 20px 8px;
+      margin: 0 0 8px;
+      padding: 0;
       font-size: 0.8rem;
       font-weight: 500;
       color: #a89f94;
       letter-spacing: 0.02em;
     }
 
-    .day-card,
-    .log-card,
-    .editor-card {
+    .day-card {
       background: #fff;
       border: 1px solid #ede6d8;
       border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 10px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
       box-shadow: 0 2px 12px rgba(30, 22, 16, 0.07);
     }
 
-    .day-card:hover,
-    .log-card:hover,
-    .editor-card:hover {
-      box-shadow: 0 4px 14px var(--shadow-card);
-      transform: translateY(-1px);
-    }
-
-    .day-card.is-default,
-    .editor-card.is-default {
+    .day-card.is-default {
       background: #fff;
       border-color: var(--border-soft);
     }
 
-    .day-card-head,
-    .log-head,
-    .editor-head {
+    .day-card-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 0;
     }
 
-    .day-title,
-    .editor-title {
-      margin: 0 0 2px;
+    .day-card-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .day-title {
+      margin: 0 0 1px;
       font-family: "DM Serif Display", serif;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 400;
       color: #1e1610;
     }
 
-    .log-title {
-      margin: 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .day-sub,
-    .editor-sub {
-      margin: 0 0 12px;
-      font-size: 0.78rem;
-      font-weight: 400;
-      color: #a89f94;
-    }
-
-    .log-sub {
-      margin: 2px 0 0;
-      font-size: 0.8rem;
+    .day-sub {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
       font-weight: 400;
       color: var(--ink-muted);
+    }
+
+    .day-edit-btn {
+      border: none;
+      background: transparent;
+      color: var(--accent-gold);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
     }
 
     .badge {
@@ -300,38 +297,108 @@
     }
 
     .card-workout-type {
-      margin: 0 0 6px;
-      font-size: 1rem;
-      font-weight: 700;
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
       color: #1e1610;
       text-align: left;
     }
 
     .card-exercises {
       margin: 0;
-      font-size: 0.875rem;
+      font-size: 0.82rem;
       font-weight: 400;
-      line-height: 1.6;
-      color: #7a6f65;
+      line-height: 1.5;
+      color: var(--ink-muted);
     }
 
     .card-notes {
-      margin: 8px 0 0;
-      font-size: 0.875rem;
+      margin: 6px 0 0;
+      font-size: 0.82rem;
       font-weight: 400;
-      line-height: 1.6;
-      color: #7a6f65;
+      line-height: 1.5;
+      color: var(--ink-muted);
     }
 
     .card-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 8px;
+    }
+
+    .history-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--cream);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .history-group {
+      margin-bottom: 12px;
+    }
+
+    .history-day-header {
+      margin: 0;
+      padding: 12px 4px 6px;
+      border-bottom: 1px solid var(--border-soft);
+      font-family: "DM Serif Display", serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .history-row {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .history-row:last-child {
+      border-bottom: none;
+    }
+
+    .history-row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .history-exercise {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .history-stats {
+      flex-shrink: 0;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--ink-muted);
+      text-align: right;
+    }
+
+    .history-edit-link {
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: var(--accent-gold);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0 0 0 8px;
+    }
+
+    .history-row-form {
+      padding-top: 8px;
     }
 
     .field {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .field label {
@@ -359,10 +426,59 @@
       line-height: 1.4;
     }
 
-    .field textarea,
-    .upload-message {
+    .field textarea {
       resize: vertical;
       min-height: 72px;
+    }
+
+    .upload-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .upload-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .upload-message {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    .send-to-bennie {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: var(--espresso);
+      color: var(--header-text);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .file-meta {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      text-align: center;
     }
 
     .btn {
@@ -404,17 +520,19 @@
       text-align: center;
       color: var(--ink-muted);
       font-size: 0.9rem;
-      padding: 24px 8px;
+      padding: 16px 8px;
     }
 
     .dropzone {
-      border: 1.5px dashed var(--border);
-      border-radius: var(--radius);
+      display: block;
+      width: 100%;
+      border: 2px dashed var(--border);
+      border-radius: 14px;
       background: #fff;
-      padding: 28px 16px;
+      padding: 32px 20px;
       text-align: center;
       color: var(--ink-muted);
-      font-size: 0.9rem;
+      cursor: pointer;
     }
 
     .dropzone.dragover {
@@ -427,10 +545,25 @@
       display: none;
     }
 
-    .dropzone strong {
+    .dropzone-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      color: var(--ink-muted);
+    }
+
+    .dropzone-title {
       display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
       color: var(--ink);
-      margin-bottom: 4px;
+    }
+
+    .dropzone-subtitle {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
     }
 
     .preview {
@@ -556,7 +689,6 @@
     <nav class="tabs" aria-label="Dashboard sections">
       <button type="button" class="tab active" data-tab="schedule">Schedule</button>
       <button type="button" class="tab" data-tab="history">History</button>
-      <button type="button" class="tab" data-tab="editor">Editor</button>
       <button type="button" class="tab" data-tab="upload">Upload</button>
     </nav>
 
@@ -571,26 +703,27 @@
         <div class="panel-body" id="historyBody"></div>
       </section>
 
-      <section class="panel" id="panel-editor" aria-labelledby="tab-editor">
-        <div class="panel-loading"><span class="spinner" aria-hidden="true"></span> Loading editor…</div>
-        <div class="panel-body" id="editorBody"></div>
-      </section>
-
       <section class="panel" id="panel-upload" aria-labelledby="tab-upload">
-        <div class="panel-body" id="uploadBody">
+        <div class="panel-body upload-panel" id="uploadBody">
           <label class="dropzone" id="dropzone">
             <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.csv,.txt,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" />
-            <strong>Drop a plan file</strong>
-            PDF or Excel · CSV or plain text
+            <span class="dropzone-icon" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </span>
+            <span class="dropzone-title">Drop a plan file</span>
+            <span class="dropzone-subtitle">PDF, Excel, CSV or plain text</span>
           </label>
+          <p class="file-meta" id="fileMeta" hidden></p>
           <div class="preview" id="filePreview" hidden></div>
-          <div class="field" style="margin-top: 14px;">
-            <label for="uploadMessage">Message to Bennie</label>
-            <textarea id="uploadMessage" class="upload-message">Bennie, here's my new workout plan. Please parse this and load it into my schedule.</textarea>
+          <div>
+            <label class="upload-label" for="uploadMessage">Message to Bennie</label>
+            <textarea id="uploadMessage" class="upload-message" rows="4">Bennie, here's my new workout plan. Please parse this and load it into my schedule.</textarea>
           </div>
-          <div class="card-actions">
-            <button type="button" class="btn primary" id="sendToBennie">Send to Bennie</button>
-          </div>
+          <button type="button" class="send-to-bennie" id="sendToBennie">Send to Bennie</button>
         </div>
       </section>
     </div>
@@ -672,20 +805,21 @@
     const panels = {
       schedule: document.getElementById("panel-schedule"),
       history: document.getElementById("panel-history"),
-      editor: document.getElementById("panel-editor"),
       upload: document.getElementById("panel-upload"),
     };
     const scheduleBody = document.getElementById("scheduleBody");
     const historyBody = document.getElementById("historyBody");
-    const editorBody = document.getElementById("editorBody");
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("fileInput");
     const filePreview = document.getElementById("filePreview");
+    const fileMeta = document.getElementById("fileMeta");
     const uploadMessage = document.getElementById("uploadMessage");
 
     let historyRows = [];
     let historyFilter = "";
     let uploadPreviewText = "";
+    let scheduleDays = [];
+    let scheduleWeekLabel = { startIso: "", endIso: "" };
 
     function showToast(text, isError) {
       toastEl.textContent = text;
@@ -760,6 +894,44 @@
       });
     }
 
+    function formatHistoryDayHeader(row) {
+      const week = row.week != null && row.week !== "" ? ` · Week ${row.week}` : "";
+      if (row.logged_at) {
+        const d = new Date(row.logged_at);
+        if (!Number.isNaN(d.getTime())) {
+          return `${d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}${week}`;
+        }
+      }
+      return `${row.day || "Workout"}${week}`;
+    }
+
+    function historyGroupKey(row) {
+      if (row.logged_at) {
+        const d = new Date(row.logged_at);
+        if (!Number.isNaN(d.getTime())) {
+          return `${formatIsoDate(d)}|${row.week ?? ""}`;
+        }
+      }
+      return `${row.day || "unknown"}|${row.week ?? ""}`;
+    }
+
+    function historySortKey(row) {
+      if (row.logged_at) {
+        const t = new Date(row.logged_at).getTime();
+        if (!Number.isNaN(t)) return t;
+      }
+      return 0;
+    }
+
+    function formatLogStats(row) {
+      const parts = [];
+      if (row.sets != null && row.reps) parts.push(`${row.sets} × ${row.reps}`);
+      else if (row.sets != null) parts.push(`${row.sets} sets`);
+      else if (row.reps) parts.push(`${row.reps}`);
+      if (row.weight_lbs != null && row.weight_lbs !== "") parts.push(`${row.weight_lbs} lb`);
+      return parts.join(" · ");
+    }
+
     async function supabaseRequest(path, options = {}) {
       const headers = {
         apikey: SUPABASE_ANON,
@@ -809,15 +981,41 @@
       const isDefault = !row;
       const modified = row?.modified === true;
       const dayName = weekdayNameFromIso(iso);
+      const dateLabel = formatDisplayDate(iso);
+      const cardId = row?.id || "";
+
+      if (row?._editing) {
+        return `
+          <article class="day-card${isDefault ? " is-default" : ""}" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(cardId)}">
+            <div class="day-card-head">
+              <div>
+                <h2 class="day-title">${escapeHtml(dayName)}</h2>
+                <p class="day-sub">${escapeHtml(dateLabel)}</p>
+              </div>
+            </div>
+            <div class="field"><label>Workout type</label><input data-field="workout_type" value="${escapeHtml(workoutType)}" /></div>
+            <div class="field"><label>Exercises</label><textarea data-field="exercises" rows="3">${escapeHtml(exercises)}</textarea></div>
+            <div class="field"><label>Notes</label><input data-field="notes" value="${escapeHtml(notes)}" /></div>
+            <div class="card-actions">
+              <button type="button" class="btn primary" data-action="save-schedule">Save</button>
+              <button type="button" class="btn ghost" data-action="cancel-schedule">Cancel</button>
+              ${cardId ? '<button type="button" class="btn danger" data-action="reset-schedule">Reset to default</button>' : ""}
+            </div>
+          </article>
+        `;
+      }
 
       return `
-        <article class="day-card${isDefault ? " is-default" : ""}">
+        <article class="day-card${isDefault ? " is-default" : ""}" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(cardId)}">
           <div class="day-card-head">
             <div>
               <h2 class="day-title">${escapeHtml(dayName)}</h2>
-              <p class="day-sub">${escapeHtml(formatDisplayDate(iso))}</p>
+              <p class="day-sub">${escapeHtml(dateLabel)}</p>
             </div>
-            ${modified ? '<span class="badge">edited</span>' : ""}
+            <div class="day-card-tools">
+              ${modified ? '<span class="badge">edited</span>' : ""}
+              <button type="button" class="day-edit-btn" data-action="edit-schedule">Edit</button>
+            </div>
           </div>
           <div class="card-body">
             <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
@@ -828,6 +1026,13 @@
       `;
     }
 
+    function renderSchedule() {
+      scheduleBody.innerHTML = `
+        <p class="week-label">Week of ${escapeHtml(formatDisplayDate(scheduleWeekLabel.startIso))} – ${escapeHtml(formatDisplayDate(scheduleWeekLabel.endIso))}</p>
+        ${scheduleDays.map(({ iso, row }) => renderScheduleDayCard(iso, row)).join("")}
+      `;
+    }
+
     async function loadSchedule() {
       setPanelLoading("schedule", true);
       try {
@@ -835,18 +1040,20 @@
         const sunday = addDays(monday, 6);
         const startIso = formatIsoDate(monday);
         const endIso = formatIsoDate(sunday);
+        scheduleWeekLabel = { startIso, endIso };
         const rows = await fetchScheduleRange(startIso, endIso);
         const byDate = mapScheduleByDate(rows);
-        const cards = [];
+        scheduleDays = [];
         for (let i = 0; i < 7; i += 1) {
           const date = addDays(monday, i);
           const iso = formatIsoDate(date);
-          cards.push(renderScheduleDayCard(iso, byDate.get(iso)));
+          const existing = byDate.get(iso);
+          scheduleDays.push({
+            iso,
+            row: existing ? { ...existing, _editing: false } : null,
+          });
         }
-        scheduleBody.innerHTML = `
-          <p class="week-label">Week of ${escapeHtml(formatDisplayDate(startIso))} – ${escapeHtml(formatDisplayDate(endIso))}</p>
-          ${cards.join("")}
-        `;
+        renderSchedule();
       } catch (err) {
         scheduleBody.innerHTML = `<p class="empty">Could not load schedule.</p>`;
         showToast(String(err.message || err), true);
@@ -855,51 +1062,34 @@
       }
     }
 
-    function renderHistoryRow(row, editing) {
-      if (editing) {
+    function renderHistoryRow(row) {
+      if (row._editing) {
         return `
-          <article class="log-card" data-id="${escapeHtml(row.id)}">
-            <div class="log-head">
-              <div>
-                <h2 class="log-title">Editing</h2>
-                <p class="log-sub">${escapeHtml(formatLoggedAt(row.logged_at))} · ${escapeHtml(row.day || "—")} · Week ${escapeHtml(row.week ?? "—")}</p>
+          <div class="history-row" data-id="${escapeHtml(row.id)}">
+            <div class="history-row-form">
+              <div class="field"><label>Exercise</label><input data-field="exercise" value="${escapeHtml(row.exercise)}" /></div>
+              <div class="field"><label>Sets</label><input data-field="sets" inputmode="numeric" value="${escapeHtml(row.sets ?? "")}" /></div>
+              <div class="field"><label>Reps</label><input data-field="reps" value="${escapeHtml(row.reps ?? "")}" /></div>
+              <div class="field"><label>Weight (lbs)</label><input data-field="weight_lbs" inputmode="decimal" value="${escapeHtml(row.weight_lbs ?? "")}" /></div>
+              <div class="field"><label>Notes</label><textarea data-field="notes">${escapeHtml(row.notes ?? "")}</textarea></div>
+              <div class="card-actions">
+                <button type="button" class="btn primary" data-action="save-log">Save</button>
+                <button type="button" class="btn ghost" data-action="cancel-log">Cancel</button>
               </div>
             </div>
-            <div class="field"><label>Exercise</label><input data-field="exercise" value="${escapeHtml(row.exercise)}" /></div>
-            <div class="field"><label>Sets</label><input data-field="sets" inputmode="numeric" value="${escapeHtml(row.sets ?? "")}" /></div>
-            <div class="field"><label>Reps</label><input data-field="reps" value="${escapeHtml(row.reps ?? "")}" /></div>
-            <div class="field"><label>Weight (lbs)</label><input data-field="weight_lbs" inputmode="decimal" value="${escapeHtml(row.weight_lbs ?? "")}" /></div>
-            <div class="field"><label>Notes</label><textarea data-field="notes">${escapeHtml(row.notes ?? "")}</textarea></div>
-            <div class="card-actions">
-              <button type="button" class="btn primary" data-action="save-log">Save</button>
-              <button type="button" class="btn ghost" data-action="cancel-log">Cancel</button>
-            </div>
-          </article>
+          </div>
         `;
       }
 
-      const setsReps = [row.sets != null ? `${row.sets} sets` : null, row.reps ? `${row.reps} reps` : null]
-        .filter(Boolean)
-        .join(" × ");
-      const weight = row.weight_lbs != null && row.weight_lbs !== "" ? `${row.weight_lbs} lb` : null;
-
+      const stats = formatLogStats(row);
       return `
-        <article class="log-card" data-id="${escapeHtml(row.id)}">
-          <div class="log-head">
-            <div>
-              <h2 class="log-title">${escapeHtml(row.exercise || "Exercise")}</h2>
-              <p class="log-sub">${escapeHtml(formatLoggedAt(row.logged_at))} · ${escapeHtml(row.day || "—")} · Week ${escapeHtml(row.week ?? "—")}</p>
-            </div>
+        <div class="history-row" data-id="${escapeHtml(row.id)}">
+          <div class="history-row-main">
+            <span class="history-exercise">${escapeHtml(row.exercise || "Exercise")}</span>
+            ${stats ? `<span class="history-stats">${escapeHtml(stats)}</span>` : ""}
+            <button type="button" class="history-edit-link" data-action="edit-log">Edit</button>
           </div>
-          <div class="card-body">
-            ${setsReps ? `<div>${escapeHtml(setsReps)}</div>` : ""}
-            ${weight ? `<div>${escapeHtml(weight)}</div>` : ""}
-            ${row.notes ? `<div>${escapeHtml(row.notes)}</div>` : ""}
-          </div>
-          <div class="card-actions">
-            <button type="button" class="btn" data-action="edit-log">Edit</button>
-          </div>
-        </article>
+        </div>
       `;
     }
 
@@ -911,16 +1101,34 @@
           .includes(historyFilter.toLowerCase());
       });
 
+      const groups = new Map();
+      filtered.forEach((row) => {
+        const key = historyGroupKey(row);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(row);
+      });
+
+      const groupHtml = Array.from(groups.values())
+        .sort((a, b) => historySortKey(b[0]) - historySortKey(a[0]))
+        .map((rows) => {
+          const header = formatHistoryDayHeader(rows[0]);
+          return `
+            <section class="history-group">
+              <h3 class="history-day-header">${escapeHtml(header)}</h3>
+              ${rows.map((row) => renderHistoryRow(row)).join("")}
+            </section>
+          `;
+        })
+        .join("");
+
       historyBody.innerHTML = `
-        <div class="field">
-          <label for="historySearch">Filter by exercise</label>
-          <input id="historySearch" class="search-input" type="search" placeholder="Search exercises…" value="${escapeHtml(historyFilter)}" />
+        <div class="history-toolbar">
+          <div class="field">
+            <label for="historySearch">Filter by exercise</label>
+            <input id="historySearch" class="search-input" type="search" placeholder="Search exercises…" value="${escapeHtml(historyFilter)}" />
+          </div>
         </div>
-        ${
-          filtered.length
-            ? filtered.map((row) => renderHistoryRow(row, row._editing)).join("")
-            : '<p class="empty">No workout logs yet.</p>'
-        }
+        ${groupHtml || '<p class="empty">No workout logs yet.</p>'}
       `;
     }
 
@@ -969,91 +1177,6 @@
       showToast("Log updated.");
     }
 
-    function renderEditorCard(iso, row) {
-      const fallback = defaultForIso(iso);
-      const workoutType = row?.workout_type || fallback.workout_type;
-      const exercises = row?.exercises || fallback.exercises;
-      const notes = row?.notes || fallback.notes;
-      const dayName = weekdayNameFromIso(iso);
-      const isDefault = !row;
-
-      if (row?._editing) {
-        return `
-          <article class="editor-card" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(row.id || "")}">
-            <div class="editor-head">
-              <div>
-                <h2 class="editor-title">${escapeHtml(dayName)}</h2>
-                <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}</p>
-              </div>
-            </div>
-            <div class="field"><label>Workout type</label><input data-field="workout_type" value="${escapeHtml(workoutType)}" /></div>
-            <div class="field"><label>Exercises</label><textarea data-field="exercises">${escapeHtml(exercises)}</textarea></div>
-            <div class="field"><label>Notes</label><textarea data-field="notes">${escapeHtml(notes)}</textarea></div>
-            <div class="card-actions">
-              <button type="button" class="btn primary" data-action="save-schedule">Save</button>
-              <button type="button" class="btn ghost" data-action="cancel-schedule">Cancel</button>
-              ${row.id ? '<button type="button" class="btn danger" data-action="reset-schedule">Reset to default</button>' : ""}
-            </div>
-          </article>
-        `;
-      }
-
-      return `
-        <article class="editor-card${isDefault ? " is-default" : ""}" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(row?.id || "")}">
-          <div class="editor-head">
-            <div>
-              <h2 class="editor-title">${escapeHtml(dayName)}</h2>
-              <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}</p>
-            </div>
-            ${row?.modified ? '<span class="badge">edited</span>' : ""}
-          </div>
-          <div class="card-body">
-            <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
-            <p class="card-exercises">${escapeHtml(exercises)}</p>
-            ${notes ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>` : ""}
-          </div>
-          <div class="card-actions">
-            <button type="button" class="btn" data-action="edit-schedule">Edit</button>
-            ${row?.id ? '<button type="button" class="btn danger" data-action="reset-schedule">Reset to default</button>' : ""}
-          </div>
-        </article>
-      `;
-    }
-
-    let editorDays = [];
-
-    function renderEditor() {
-      editorBody.innerHTML = editorDays
-        .map(({ iso, row }) => renderEditorCard(iso, row))
-        .join("");
-    }
-
-    async function loadEditor() {
-      setPanelLoading("editor", true);
-      try {
-        const start = new Date();
-        start.setHours(0, 0, 0, 0);
-        const end = addDays(start, 13);
-        const startIso = formatIsoDate(start);
-        const endIso = formatIsoDate(end);
-        const rows = await fetchScheduleRange(startIso, endIso);
-        const byDate = mapScheduleByDate(rows);
-        editorDays = [];
-        for (let i = 0; i < 14; i += 1) {
-          const date = addDays(start, i);
-          const iso = formatIsoDate(date);
-          const row = byDate.get(iso) || null;
-          editorDays.push({ iso, row: row ? { ...row, _editing: false } : null });
-        }
-        renderEditor();
-      } catch (err) {
-        editorBody.innerHTML = `<p class="empty">Could not load editor.</p>`;
-        showToast(String(err.message || err), true);
-      } finally {
-        setPanelLoading("editor", false);
-      }
-    }
-
     async function saveScheduleCard(iso, card) {
       const payload = {
         scheduled_date: iso,
@@ -1084,11 +1207,11 @@
         });
       }
       showToast("Schedule saved.");
-      await loadEditor();
-      if (panels.schedule.classList.contains("active")) await loadSchedule();
+      await loadSchedule();
     }
 
     async function resetScheduleCard(iso, id) {
+      if (!window.confirm("Reset this day to the default program?")) return;
       if (id) {
         await supabaseRequest(`workout_schedule?id=eq.${encodeURIComponent(id)}`, {
           method: "DELETE",
@@ -1101,8 +1224,7 @@
         });
       }
       showToast("Reset to default program.");
-      await loadEditor();
-      if (panels.schedule.classList.contains("active")) await loadSchedule();
+      await loadSchedule();
     }
 
     function activateTab(name) {
@@ -1112,7 +1234,6 @@
       });
       if (name === "schedule") loadSchedule();
       if (name === "history") loadHistory();
-      if (name === "editor") loadEditor();
     }
 
     tabs.forEach((tab) => {
@@ -1129,7 +1250,7 @@
     historyBody.addEventListener("click", async (event) => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
-      const card = button.closest(".log-card");
+      const card = button.closest(".history-row");
       const id = card?.dataset.id;
       if (!id) return;
 
@@ -1160,16 +1281,16 @@
       }
     });
 
-    editorBody.addEventListener("click", async (event) => {
+    scheduleBody.addEventListener("click", async (event) => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
-      const card = button.closest(".editor-card");
+      const card = button.closest(".day-card");
       const iso = card?.dataset.date;
       if (!iso) return;
       const id = card.dataset.id || "";
 
       if (button.dataset.action === "edit-schedule") {
-        editorDays = editorDays.map((entry) => {
+        scheduleDays = scheduleDays.map((entry) => {
           if (entry.iso !== iso) {
             if (entry.row) entry.row._editing = false;
             return entry;
@@ -1178,16 +1299,16 @@
           row._editing = true;
           return { iso, row };
         });
-        renderEditor();
+        renderSchedule();
         return;
       }
 
       if (button.dataset.action === "cancel-schedule") {
-        editorDays = editorDays.map((entry) => {
+        scheduleDays = scheduleDays.map((entry) => {
           if (entry.row) entry.row._editing = false;
           return entry;
         });
-        renderEditor();
+        renderSchedule();
         return;
       }
 
@@ -1244,19 +1365,18 @@
 
     async function handleFile(file) {
       if (!file) return;
-      let preview = "";
+      fileMeta.hidden = false;
+      fileMeta.textContent = `${file.name} · ${formatFileSize(file.size)}`;
       if (isTextLike(file)) {
-        preview = await file.text();
+        const preview = await file.text();
         uploadPreviewText = preview;
-      } else if (isSpreadsheetOrPdf(file)) {
-        preview = `${file.name}\n${formatFileSize(file.size)}\n\nPreview not available for PDF or Excel in the browser. Send the message to Bennie and attach details in chat if needed.`;
-        uploadPreviewText = "";
-      } else {
-        preview = `${file.name}\n${formatFileSize(file.size)}`;
-        uploadPreviewText = "";
+        filePreview.hidden = false;
+        filePreview.textContent = preview;
+        return;
       }
-      filePreview.hidden = false;
-      filePreview.textContent = preview;
+      uploadPreviewText = "";
+      filePreview.hidden = true;
+      filePreview.textContent = "";
     }
 
     dropzone.addEventListener("click", () => fileInput.click());
