@@ -153,8 +153,20 @@
 
     .tab.active {
       background: #fff;
-      color: var(--ink);
-      box-shadow: 0 1px 4px var(--shadow-soft);
+      color: var(--espresso);
+      box-shadow: 0 1px 4px rgba(30, 22, 16, 0.08);
+      border: none;
+      outline: none;
+    }
+
+    .tab:focus,
+    .tab:focus-visible {
+      outline: none;
+    }
+
+    .tab.active:focus,
+    .tab.active:focus-visible {
+      box-shadow: 0 1px 4px rgba(30, 22, 16, 0.08);
     }
 
     .panels {
@@ -227,11 +239,11 @@
 
     .day-card {
       background: #fff;
-      border: 1px solid #ede6d8;
-      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
       padding: 12px 14px;
       margin-bottom: 8px;
-      box-shadow: 0 2px 12px rgba(30, 22, 16, 0.07);
+      box-shadow: 0 1px 6px rgba(30, 22, 16, 0.06);
     }
 
     .day-card.is-default {
@@ -243,8 +255,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 0;
+      gap: 0;
+      margin: 0;
     }
 
     .day-card-tools {
@@ -257,13 +269,13 @@
     .day-title {
       margin: 0;
       font-family: "DM Serif Display", serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 400;
-      color: #1e1610;
+      color: var(--ink);
     }
 
     .day-sub {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: 0.75rem;
       font-weight: 400;
       color: var(--ink-muted);
@@ -273,7 +285,7 @@
       border: none;
       background: transparent;
       color: var(--accent-gold);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 500;
       cursor: pointer;
       padding: 0;
@@ -292,54 +304,82 @@
       flex-shrink: 0;
     }
 
-    .card-body {
-      white-space: pre-wrap;
+    .schedule-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
-    .card-workout-type {
+    .schedule-block + .schedule-block {
+      border-top: 1px solid var(--border-soft);
+      margin: 8px 0 0;
+    }
+
+    .schedule-block-label {
       margin: 0 0 4px;
-      font-size: 0.9rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      color: #1e1610;
-      text-align: left;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .card-exercises {
-      margin: 0;
+    .schedule-block:not(:first-child) .schedule-block-label {
+      margin-top: 8px;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 1fr 44px 56px 68px;
+      align-items: center;
+    }
+
+    .schedule-grid-header {
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--warm-grey);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .schedule-grid-header span:nth-child(2),
+    .schedule-grid-header span:nth-child(3),
+    .schedule-grid-header span:nth-child(4) {
+      text-align: center;
+    }
+
+    .schedule-exercise-row {
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .schedule-exercise-row:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-col-name {
+      min-width: 0;
       font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .schedule-col-sets,
+    .schedule-col-reps,
+    .schedule-col-weight {
+      font-size: 0.8rem;
       font-weight: 400;
-      line-height: 1.5;
       color: var(--ink-muted);
+      text-align: center;
     }
 
     .card-notes {
-      margin: 6px 0 0;
+      margin: 8px 0 0;
       font-size: 0.82rem;
       font-weight: 400;
       line-height: 1.5;
-      color: var(--ink-muted);
-    }
-
-    .card-block-divider {
-      border-top: 1px solid var(--border-soft);
-      margin: 8px 0;
-    }
-
-    .card-cardio-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card-cardio-icon {
-      display: inline-flex;
-      flex-shrink: 0;
-      color: var(--ink-muted);
-    }
-
-    .card-cardio-text {
-      font-size: 0.82rem;
-      font-weight: 500;
       color: var(--ink-muted);
     }
 
@@ -836,48 +876,149 @@
       {
         workout_type: "Lower Body Power",
         exercises:
-          "Tonal Squat 3x3–5, KB RDL 3x6–8, Hip Thrust 3x8–10 · MetCon: KB Swing, goblet pulse, Bulgarian split squat",
-        cardio: "Zone 2 · 25 min",
+          "Tonal Squat 3x3–5, KB RDL 3x6–8, Hip Thrust 3x8–10, MetCon: KB Swing · Goblet Squat · Bulgarian Split Squat",
         notes: "",
+        blocks: [
+          {
+            kind: "strength",
+            title: "Lower Body Power",
+            showLabel: true,
+            exercises: [
+              { name: "Tonal Squat", sets: 3, reps: "3–5", weight: null },
+              { name: "KB RDL", sets: 3, reps: "6–8", weight: null },
+              { name: "Hip Thrust", sets: 3, reps: "8–10", weight: null },
+              {
+                name: "MetCon: KB Swing · Goblet Squat · Bulgarian Split Squat",
+                sets: null,
+                reps: "8 min AMRAP",
+                weight: null,
+              },
+            ],
+          },
+          {
+            kind: "run",
+            title: "Zone 2",
+            showLabel: true,
+            exercises: [{ name: "Zone 2", sets: null, reps: "25 min", weight: null }],
+          },
+        ],
       },
       {
         workout_type: "Zone 2 + LeoMoves",
-        exercises: "Easy aerobic run 25–30 min · LeoMoves mobility",
+        exercises: "Easy aerobic run 25–30 min, LeoMoves mobility",
         notes: "",
+        blocks: [
+          {
+            kind: "run",
+            showLabel: false,
+            exercises: [
+              { name: "Easy aerobic run", sets: null, reps: "25–30 min", weight: null },
+              { name: "LeoMoves mobility", sets: null, reps: null, weight: null },
+            ],
+          },
+        ],
       },
       {
         workout_type: "Upper Push/Pull",
         exercises:
-          "DB Bench 3x4–6, Pull-Ups 3x fail-2, DB OHP 3x6–8 · MetCon: face pull, lateral raise, hammer curl, row",
-        cardio: "Intervals · 8 × 1 min on / 2 min off",
+          "DB Bench Press 3x4–6, Pull-Ups 3x to failure–2, DB OHP 3x6–8, MetCon: Face Pull · Lateral Raise · Hammer Curl · Row",
         notes: "",
+        blocks: [
+          {
+            kind: "strength",
+            title: "Upper Push/Pull",
+            showLabel: true,
+            exercises: [
+              { name: "DB Bench Press", sets: 3, reps: "4–6", weight: null },
+              { name: "Pull-Ups", sets: 3, reps: "to failure–2", weight: null },
+              { name: "DB OHP", sets: 3, reps: "6–8", weight: null },
+              {
+                name: "MetCon: Face Pull · Lateral Raise · Hammer Curl · Row",
+                sets: null,
+                reps: "8 min AMRAP",
+                weight: null,
+              },
+            ],
+          },
+          {
+            kind: "run",
+            title: "Intervals",
+            showLabel: true,
+            exercises: [{ name: "Intervals", sets: null, reps: "8×1 min on/2 off", weight: null }],
+          },
+        ],
       },
       {
         workout_type: "Intervals + LeoMoves",
-        exercises: "Intervals run — push effort · LeoMoves mobility",
+        exercises: "Intervals run, LeoMoves mobility",
         notes: "",
+        blocks: [
+          {
+            kind: "run",
+            showLabel: false,
+            exercises: [
+              { name: "Intervals run", sets: null, reps: "push effort", weight: null },
+              { name: "LeoMoves mobility", sets: null, reps: null, weight: null },
+            ],
+          },
+        ],
       },
       {
         workout_type: "Full Body Functional",
         exercises:
-          "KB Deadlift, weighted pull-ups, DB bench · MetCon: hip thrust, clean & press, swings, plank-to-push-up",
-        cardio: "Zone 2 · 20–30 min",
+          "KB Deadlift 3x4–6, Weighted Pull-Ups 3x4–6, DB Bench 3x6–8, MetCon: Hip Thrust · KB Clean & Press · KB Swing · Plank-Push-Up",
         notes: "",
+        blocks: [
+          {
+            kind: "strength",
+            title: "Full Body",
+            showLabel: true,
+            exercises: [
+              { name: "KB Deadlift", sets: 3, reps: "4–6", weight: null },
+              { name: "Weighted Pull-Ups", sets: 3, reps: "4–6", weight: null },
+              { name: "DB Bench", sets: 3, reps: "6–8", weight: null },
+              {
+                name: "MetCon: Hip Thrust · KB Clean & Press · KB Swing · Plank-Push-Up",
+                sets: null,
+                reps: "10 min AMRAP",
+                weight: null,
+              },
+            ],
+          },
+          {
+            kind: "run",
+            title: "Zone 2",
+            showLabel: true,
+            exercises: [{ name: "Zone 2", sets: null, reps: "20–30 min", weight: null }],
+          },
+        ],
       },
       {
         workout_type: "Pilates",
-        exercises: "Active recovery, core, flexibility",
+        exercises: "Pilates full session",
         notes: "",
+        blocks: [
+          {
+            showLabel: false,
+            exercises: [{ name: "Pilates", sets: null, reps: "full session", weight: null }],
+          },
+        ],
       },
       {
         workout_type: "Long Run + LeoMoves",
-        exercises: "Long easy run · LeoMoves mobility",
+        exercises: "Long run, LeoMoves mobility",
         notes: "",
+        blocks: [
+          {
+            showLabel: false,
+            exercises: [
+              { name: "Long run", sets: null, reps: "easy pace", weight: null },
+              { name: "LeoMoves mobility", sets: null, reps: null, weight: null },
+            ],
+          },
+        ],
       },
     ];
-
-    const RUN_ICON =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="M9 20l1-5 2 2 2-5"/><path d="M6 14l1-4 5 1 2-4"/></svg>';
 
     const toastEl = document.getElementById("toast");
     const tabs = document.querySelectorAll(".tab");
@@ -1052,41 +1193,113 @@
       return map;
     }
 
-    function scheduleCardioText(row, fallback) {
-      if (row?.cardio != null && String(row.cardio).trim() !== "") {
-        return String(row.cardio).trim();
-      }
-      return fallback.cardio ? String(fallback.cardio).trim() : "";
+
+    function scheduleCellValue(value) {
+      if (value === null || value === undefined || value === "") return "—";
+      return String(value);
     }
 
-    function renderScheduleCardBody(workoutType, exercises, notes, cardio) {
+    function formatScheduleBlockLabel(kind, title) {
+      const prefix = kind === "strength" ? "Strength" : "Run";
+      return title ? `${prefix} — ${title}` : prefix;
+    }
+
+    function renderScheduleExerciseRows(exercises) {
+      return exercises
+        .map(
+          (exercise) => `
+        <div class="schedule-grid schedule-exercise-row">
+          <span class="schedule-col-name">${escapeHtml(exercise.name)}</span>
+          <span class="schedule-col-sets">${escapeHtml(scheduleCellValue(exercise.sets))}</span>
+          <span class="schedule-col-reps">${escapeHtml(scheduleCellValue(exercise.reps))}</span>
+          <span class="schedule-col-weight">${escapeHtml(scheduleCellValue(exercise.weight))}</span>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    function renderScheduleBlock(block) {
+      const labelHtml =
+        block.showLabel !== false
+          ? `<div class="schedule-block-label">${escapeHtml(formatScheduleBlockLabel(block.kind, block.title))}</div>`
+          : "";
+
+      return `
+        <section class="schedule-block">
+          ${labelHtml}
+          <div class="schedule-grid schedule-grid-header">
+            <span>Exercise</span>
+            <span>Sets</span>
+            <span>Reps</span>
+            <span>Weight</span>
+          </div>
+          ${renderScheduleExerciseRows(block.exercises)}
+        </section>
+      `;
+    }
+
+    function runExercisesFromCardio(cardio) {
+      const text = String(cardio || "").trim();
+      if (!text) return [];
+      const parts = text.split("·").map((part) => part.trim());
+      if (parts.length >= 2) {
+        return [{ name: parts[0], sets: null, reps: parts.slice(1).join(" · "), weight: null }];
+      }
+      return [{ name: text, sets: null, reps: null, weight: null }];
+    }
+
+    function exercisesFromText(text) {
+      const trimmed = String(text || "").trim();
+      if (!trimmed) return [];
+      return [{ name: trimmed, sets: null, reps: null, weight: null }];
+    }
+
+    function scheduleBlocksForDisplay(row, fallback) {
+      if (!row) return fallback.blocks;
+
+      const blocks = [];
+      const workoutType = row.workout_type || fallback.workout_type || "";
+      const strengthText =
+        row.exercises != null && String(row.exercises).trim() !== ""
+          ? String(row.exercises).trim()
+          : "";
+
+      if (workoutType || strengthText) {
+        blocks.push({
+          kind: "strength",
+          title: workoutType || fallback.blocks.find((block) => block.kind === "strength")?.title || "",
+          showLabel: true,
+          exercises: strengthText ? exercisesFromText(strengthText) : [],
+        });
+      }
+
+      const cardio =
+        row.cardio != null && String(row.cardio).trim() !== "" ? String(row.cardio).trim() : "";
+      if (cardio) {
+        const runFallback = fallback.blocks.find((block) => block.kind === "run");
+        blocks.push({
+          kind: "run",
+          title: runFallback?.title || "",
+          showLabel: runFallback ? runFallback.showLabel : true,
+          exercises: runExercisesFromCardio(cardio),
+        });
+      }
+
+      if (!blocks.length) return fallback.blocks;
+      return blocks;
+    }
+
+    function renderScheduleCardBody(row, fallback, notes) {
+      const blocks = scheduleBlocksForDisplay(row, fallback);
       const notesHtml = notes
         ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>`
         : "";
-      if (cardio) {
-        return `
-          <div class="card-body">
-            <div class="card-strength-block">
-              <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
-              <p class="card-exercises">${escapeHtml(exercises)}</p>
-            </div>
-            <div class="card-block-divider" role="presentation"></div>
-            <div class="card-cardio-block">
-              <div class="card-cardio-row">
-                <span class="card-cardio-icon" aria-hidden="true">${RUN_ICON}</span>
-                <span class="card-cardio-text">${escapeHtml(cardio)}</span>
-              </div>
-            </div>
-            ${notesHtml}
-          </div>
-        `;
-      }
       return `
-        <div class="card-body">
-          <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
-          <p class="card-exercises">${escapeHtml(exercises)}</p>
-          ${notesHtml}
+        <div class="schedule-blocks">
+          ${blocks.map((block) => renderScheduleBlock(block)).join("")}
         </div>
+        ${notesHtml}
       `;
     }
 
@@ -1095,7 +1308,6 @@
       const workoutType = row?.workout_type || fallback.workout_type;
       const exercises = row?.exercises || fallback.exercises;
       const notes = row?.notes || fallback.notes;
-      const cardio = scheduleCardioText(row, fallback);
       const isDefault = !row;
       const modified = row?.modified === true;
       const dayName = weekdayNameFromIso(iso);
@@ -1135,7 +1347,7 @@
               <button type="button" class="day-edit-btn" data-action="edit-schedule">Edit</button>
             </div>
           </div>
-          ${renderScheduleCardBody(workoutType, exercises, notes, cardio)}
+          ${renderScheduleCardBody(row, fallback, notes)}
         </article>
       `;
     }
