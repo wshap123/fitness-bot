@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2a211c" />
+  <title>Bennie — Dashboard</title>
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --linen: #f3efe8;
+      --sand: #e8e2d8;
+      --tan: #e5dccf;
+      --tan-deep: #d4c9b9;
+      --warm-grey: #b0a69b;
+      --warm-grey-deep: #9a9187;
+      --espresso: #2a211c;
+      --espresso-mid: #3d322b;
+      --espresso-soft: #4a3f36;
+      --ink: #2c241c;
+      --ink-muted: #6b6158;
+      --border: #dcd3c6;
+      --border-soft: #ebe4da;
+      --header-bg: var(--espresso);
+      --header-border: #3a3028;
+      --header-text: #faf6f1;
+      --header-text-dim: rgba(250, 246, 241, 0.62);
+      --header-surface: #3a312a;
+      --header-surface-border: #524840;
+      --shadow-soft: rgba(42, 33, 28, 0.08);
+      --shadow-medium: rgba(42, 33, 28, 0.12);
+      --danger: #9c4c3d;
+      --danger-bg: #faf0ee;
+      --amber: #c58a2a;
+      --amber-bg: #faf3e6;
+      --radius: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      height: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    }
+
+    header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--header-border);
+      background: var(--header-bg);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: var(--header-text);
+    }
+
+    .brand p {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--header-text-dim);
+    }
+
+  .header-link {
+      flex-shrink: 0;
+      color: var(--header-text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--header-surface-border);
+      background: var(--header-surface);
+    }
+
+    .header-link:active {
+      transform: scale(0.98);
+    }
+
+    .tabs {
+      flex-shrink: 0;
+      display: flex;
+      gap: 4px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--linen);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 72px;
+      border: none;
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 6px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--cream);
+      color: var(--ink);
+      box-shadow: 0 1px 0 var(--shadow-soft), 0 4px 12px var(--shadow-soft);
+    }
+
+    .panels {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      background: var(--cream);
+    }
+
+    .panel {
+      display: none;
+      height: 100%;
+      overflow-y: auto;
+      padding: 14px 12px calc(14px + env(safe-area-inset-bottom));
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-loading {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 28px 12px;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+    }
+
+    .panel.loading .panel-loading {
+      display: flex;
+    }
+
+    .panel.loading .panel-body {
+      display: none;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      border-top-color: var(--espresso);
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .week-label {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .day-card,
+    .log-card,
+    .editor-card {
+      background: var(--tan);
+      border: 1px solid var(--tan-deep);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 0 var(--shadow-soft);
+    }
+
+    .day-card.is-default,
+    .editor-card.is-default {
+      background: var(--linen);
+      border-color: var(--border);
+    }
+
+    .day-card-head,
+    .log-head,
+    .editor-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .day-title,
+    .log-title,
+    .editor-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+
+    .day-sub,
+    .log-sub,
+    .editor-sub {
+      margin: 2px 0 0;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--amber);
+      background: var(--amber-bg);
+      border: 1px solid #e8c98a;
+      border-radius: 999px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+
+    .badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .card-body {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .card-body strong {
+      font-weight: 650;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .field input,
+    .field textarea,
+    .search-input,
+  .upload-message {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--linen);
+      color: var(--ink);
+      font-size: 16px;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    .field textarea,
+    .upload-message {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .btn {
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--sand);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .btn.primary {
+      background: var(--espresso);
+      border-color: #1a1410;
+      color: #f5f0e8;
+      box-shadow: 0 4px 14px var(--shadow-medium);
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn.danger {
+      color: var(--danger);
+      border-color: #d4b8b0;
+      background: var(--danger-bg);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      padding: 24px 8px;
+    }
+
+    .dropzone {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--linen);
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--warm-grey-deep);
+      background: var(--sand);
+      color: var(--ink);
+    }
+
+    .dropzone input {
+      display: none;
+    }
+
+    .dropzone strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .preview {
+      margin-top: 12px;
+      max-height: 220px;
+      overflow: auto;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--linen);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(12px);
+      background: var(--espresso);
+      color: #f5f0e8;
+      border: 1px solid var(--espresso-mid);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      max-width: min(90%, 360px);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 50;
+      box-shadow: 0 12px 40px var(--shadow-medium);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error {
+      color: var(--danger);
+      border-color: #d4b8b0;
+      background: var(--danger-bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1>Bennie</h1>
+        <p>Dashboard</p>
+      </div>
+      <a class="header-link" href="index.html">← Chat</a>
+    </header>
+
+    <nav class="tabs" aria-label="Dashboard sections">
+      <button type="button" class="tab active" data-tab="schedule">Schedule</button>
+      <button type="button" class="tab" data-tab="history">History</button>
+      <button type="button" class="tab" data-tab="editor">Editor</button>
+      <button type="button" class="tab" data-tab="upload">Upload</button>
+    </nav>
+
+    <div class="panels">
+      <section class="panel active" id="panel-schedule" aria-labelledby="tab-schedule">
+        <div class="panel-loading"><span class="spinner" aria-hidden="true"></span> Loading schedule…</div>
+        <div class="panel-body" id="scheduleBody"></div>
+      </section>
+
+      <section class="panel" id="panel-history" aria-labelledby="tab-history">
+        <div class="panel-loading"><span class="spinner" aria-hidden="true"></span> Loading history…</div>
+        <div class="panel-body" id="historyBody"></div>
+      </section>
+
+      <section class="panel" id="panel-editor" aria-labelledby="tab-editor">
+        <div class="panel-loading"><span class="spinner" aria-hidden="true"></span> Loading editor…</div>
+        <div class="panel-body" id="editorBody"></div>
+      </section>
+
+      <section class="panel" id="panel-upload" aria-labelledby="tab-upload">
+        <div class="panel-body" id="uploadBody">
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.csv,.txt,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" />
+            <strong>Drop a plan file</strong>
+            PDF or Excel · CSV or plain text
+          </label>
+          <div class="preview" id="filePreview" hidden></div>
+          <div class="field" style="margin-top: 14px;">
+            <label for="uploadMessage">Message to Bennie</label>
+            <textarea id="uploadMessage" class="upload-message">Bennie, here's my new workout plan. Please parse this and load it into my schedule.</textarea>
+          </div>
+          <div class="card-actions">
+            <button type="button" class="btn primary" id="sendToBennie">Send to Bennie</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const SUPABASE_URL = "https://bhtuxfvnvcjivkuhubfr.supabase.co";
+    const SUPABASE_ANON =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHV4ZnZudmNqaXZrdWh1YmZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNjk3NzksImV4cCI6MjA5Mzg0NTc3OX0.aya7us9oNmFPbxqPAN2-yv5xBFi24SB1ND7bHdfw2gI";
+    const PENDING_MSG_KEY = "pending_chat_message";
+    const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    const DEFAULT_PROGRAM = [
+      {
+        workout_type: "Lower Body Power",
+        exercises:
+          "Tonal Squat 3x3–5, KB RDL 3x6–8, Hip Thrust 3x8–10 · MetCon: KB Swing, goblet pulse, Bulgarian split squat · Zone 2 run 25 min",
+        notes: "",
+      },
+      {
+        workout_type: "Zone 2 + LeoMoves",
+        exercises: "Easy aerobic run 25–30 min · LeoMoves mobility",
+        notes: "",
+      },
+      {
+        workout_type: "Upper Push/Pull",
+        exercises:
+          "DB Bench 3x4–6, Pull-Ups 3x fail-2, DB OHP 3x6–8 · MetCon: face pull, lateral raise, hammer curl, row · Intervals 25 min",
+        notes: "",
+      },
+      {
+        workout_type: "Intervals + LeoMoves",
+        exercises: "Intervals run — push effort · LeoMoves mobility",
+        notes: "",
+      },
+      {
+        workout_type: "Full Body Functional",
+        exercises:
+          "KB Deadlift, weighted pull-ups, DB bench · MetCon: hip thrust, clean & press, swings, plank-to-push-up · Zone 2 run 20–30 min",
+        notes: "",
+      },
+      {
+        workout_type: "Pilates",
+        exercises: "Active recovery, core, flexibility",
+        notes: "",
+      },
+      {
+        workout_type: "Long Run + LeoMoves",
+        exercises: "Long easy run · LeoMoves mobility",
+        notes: "",
+      },
+    ];
+
+    const toastEl = document.getElementById("toast");
+    const tabs = document.querySelectorAll(".tab");
+    const panels = {
+      schedule: document.getElementById("panel-schedule"),
+      history: document.getElementById("panel-history"),
+      editor: document.getElementById("panel-editor"),
+      upload: document.getElementById("panel-upload"),
+    };
+    const scheduleBody = document.getElementById("scheduleBody");
+    const historyBody = document.getElementById("historyBody");
+    const editorBody = document.getElementById("editorBody");
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+    const filePreview = document.getElementById("filePreview");
+    const uploadMessage = document.getElementById("uploadMessage");
+
+    let historyRows = [];
+    let historyFilter = "";
+    let uploadPreviewText = "";
+
+    function showToast(text, isError) {
+      toastEl.textContent = text;
+      toastEl.classList.toggle("error", !!isError);
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove("show"), 3200);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatIsoDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseIsoDate(iso) {
+      const [y, m, d] = iso.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function weekdayNameFromIso(iso) {
+      const day = parseIsoDate(iso).getDay();
+      return WEEKDAY_NAMES[day === 0 ? 6 : day - 1];
+    }
+
+    function defaultForIso(iso) {
+      const day = parseIsoDate(iso).getDay();
+      const index = day === 0 ? 6 : day - 1;
+      return DEFAULT_PROGRAM[index];
+    }
+
+    function mondayOfWeek(date = new Date()) {
+      const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+
+    function addDays(date, days) {
+      const d = new Date(date.getTime());
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+
+    function formatDisplayDate(iso) {
+      return parseIsoDate(iso).toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function formatLoggedAt(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      return d.toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    }
+
+    async function supabaseRequest(path, options = {}) {
+      const headers = {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        ...(options.headers || {}),
+      };
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+        ...options,
+        headers,
+      });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(errText || `Supabase error ${res.status}`);
+      }
+      if (res.status === 204) return null;
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+    }
+
+    function setPanelLoading(name, loading) {
+      panels[name].classList.toggle("loading", loading);
+    }
+
+    async function fetchScheduleRange(startIso, endIso) {
+      const query = new URLSearchParams({
+        select: "*",
+        order: "scheduled_date.asc",
+      });
+      query.set("scheduled_date", `gte.${startIso}`);
+      query.append("scheduled_date", `lte.${endIso}`);
+      return supabaseRequest(`workout_schedule?${query.toString()}`);
+    }
+
+    function mapScheduleByDate(rows) {
+      const map = new Map();
+      (rows || []).forEach((row) => {
+        if (row.scheduled_date) map.set(row.scheduled_date, row);
+      });
+      return map;
+    }
+
+    function renderScheduleDayCard(iso, row) {
+      const fallback = defaultForIso(iso);
+      const workoutType = row?.workout_type || fallback.workout_type;
+      const exercises = row?.exercises || fallback.exercises;
+      const notes = row?.notes || fallback.notes;
+      const isDefault = !row;
+      const modified = row?.modified === true;
+      const dayName = weekdayNameFromIso(iso);
+
+      return `
+        <article class="day-card${isDefault ? " is-default" : ""}">
+          <div class="day-card-head">
+            <div>
+              <h2 class="day-title">${escapeHtml(dayName)}</h2>
+              <p class="day-sub">${escapeHtml(formatDisplayDate(iso))}</p>
+            </div>
+            ${modified ? '<span class="badge">modified</span>' : ""}
+          </div>
+          <div class="card-body">
+            <strong>${escapeHtml(workoutType)}</strong>
+            <div>${escapeHtml(exercises)}</div>
+            ${notes ? `<div><strong>Notes</strong> ${escapeHtml(notes)}</div>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    async function loadSchedule() {
+      setPanelLoading("schedule", true);
+      try {
+        const monday = mondayOfWeek();
+        const sunday = addDays(monday, 6);
+        const startIso = formatIsoDate(monday);
+        const endIso = formatIsoDate(sunday);
+        const rows = await fetchScheduleRange(startIso, endIso);
+        const byDate = mapScheduleByDate(rows);
+        const cards = [];
+        for (let i = 0; i < 7; i += 1) {
+          const date = addDays(monday, i);
+          const iso = formatIsoDate(date);
+          cards.push(renderScheduleDayCard(iso, byDate.get(iso)));
+        }
+        scheduleBody.innerHTML = `
+          <p class="week-label">Week of ${escapeHtml(formatDisplayDate(startIso))} – ${escapeHtml(formatDisplayDate(endIso))}</p>
+          ${cards.join("")}
+        `;
+      } catch (err) {
+        scheduleBody.innerHTML = `<p class="empty">Could not load schedule.</p>`;
+        showToast(String(err.message || err), true);
+      } finally {
+        setPanelLoading("schedule", false);
+      }
+    }
+
+    function renderHistoryRow(row, editing) {
+      if (editing) {
+        return `
+          <article class="log-card" data-id="${escapeHtml(row.id)}">
+            <div class="log-head">
+              <div>
+                <h2 class="log-title">Editing</h2>
+                <p class="log-sub">${escapeHtml(formatLoggedAt(row.logged_at))} · ${escapeHtml(row.day || "—")} · Week ${escapeHtml(row.week ?? "—")}</p>
+              </div>
+            </div>
+            <div class="field"><label>Exercise</label><input data-field="exercise" value="${escapeHtml(row.exercise)}" /></div>
+            <div class="field"><label>Sets</label><input data-field="sets" inputmode="numeric" value="${escapeHtml(row.sets ?? "")}" /></div>
+            <div class="field"><label>Reps</label><input data-field="reps" value="${escapeHtml(row.reps ?? "")}" /></div>
+            <div class="field"><label>Weight (lbs)</label><input data-field="weight_lbs" inputmode="decimal" value="${escapeHtml(row.weight_lbs ?? "")}" /></div>
+            <div class="field"><label>Notes</label><textarea data-field="notes">${escapeHtml(row.notes ?? "")}</textarea></div>
+            <div class="card-actions">
+              <button type="button" class="btn primary" data-action="save-log">Save</button>
+              <button type="button" class="btn ghost" data-action="cancel-log">Cancel</button>
+            </div>
+          </article>
+        `;
+      }
+
+      const setsReps = [row.sets != null ? `${row.sets} sets` : null, row.reps ? `${row.reps} reps` : null]
+        .filter(Boolean)
+        .join(" × ");
+      const weight = row.weight_lbs != null && row.weight_lbs !== "" ? `${row.weight_lbs} lb` : null;
+
+      return `
+        <article class="log-card" data-id="${escapeHtml(row.id)}">
+          <div class="log-head">
+            <div>
+              <h2 class="log-title">${escapeHtml(row.exercise || "Exercise")}</h2>
+              <p class="log-sub">${escapeHtml(formatLoggedAt(row.logged_at))} · ${escapeHtml(row.day || "—")} · Week ${escapeHtml(row.week ?? "—")}</p>
+            </div>
+          </div>
+          <div class="card-body">
+            ${setsReps ? `<div>${escapeHtml(setsReps)}</div>` : ""}
+            ${weight ? `<div>${escapeHtml(weight)}</div>` : ""}
+            ${row.notes ? `<div>${escapeHtml(row.notes)}</div>` : ""}
+          </div>
+          <div class="card-actions">
+            <button type="button" class="btn" data-action="edit-log">Edit</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderHistory() {
+      const filtered = historyRows.filter((row) => {
+        if (!historyFilter) return true;
+        return String(row.exercise || "")
+          .toLowerCase()
+          .includes(historyFilter.toLowerCase());
+      });
+
+      historyBody.innerHTML = `
+        <div class="field">
+          <label for="historySearch">Filter by exercise</label>
+          <input id="historySearch" class="search-input" type="search" placeholder="Search exercises…" value="${escapeHtml(historyFilter)}" />
+        </div>
+        ${
+          filtered.length
+            ? filtered.map((row) => renderHistoryRow(row, row._editing)).join("")
+            : '<p class="empty">No workout logs yet.</p>'
+        }
+      `;
+    }
+
+    async function loadHistory() {
+      setPanelLoading("history", true);
+      try {
+        const rows = await supabaseRequest("workout_logs?select=*&order=logged_at.desc");
+        historyRows = (rows || []).map((row) => ({ ...row, _editing: false }));
+        renderHistory();
+      } catch (err) {
+        historyBody.innerHTML = `<p class="empty">Could not load history.</p>`;
+        showToast(String(err.message || err), true);
+      } finally {
+        setPanelLoading("history", false);
+      }
+    }
+
+    async function saveHistoryRow(id, card) {
+      const payload = {
+        exercise: card.querySelector('[data-field="exercise"]').value.trim(),
+        sets: card.querySelector('[data-field="sets"]').value.trim(),
+        reps: card.querySelector('[data-field="reps"]').value.trim(),
+        weight_lbs: card.querySelector('[data-field="weight_lbs"]').value.trim(),
+        notes: card.querySelector('[data-field="notes"]').value.trim(),
+      };
+      const sets = payload.sets === "" ? null : Number.parseInt(payload.sets, 10);
+      const weight = payload.weight_lbs === "" ? null : Number(payload.weight_lbs);
+      const body = {
+        exercise: payload.exercise,
+        sets: Number.isFinite(sets) ? sets : null,
+        reps: payload.reps || null,
+        weight_lbs: Number.isFinite(weight) ? weight : null,
+        notes: payload.notes || null,
+      };
+      await supabaseRequest(`workout_logs?id=eq.${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(body),
+      });
+      const row = historyRows.find((item) => String(item.id) === String(id));
+      if (row) Object.assign(row, body, { _editing: false });
+      renderHistory();
+      showToast("Log updated.");
+    }
+
+    function renderEditorCard(iso, row) {
+      const fallback = defaultForIso(iso);
+      const workoutType = row?.workout_type || fallback.workout_type;
+      const exercises = row?.exercises || fallback.exercises;
+      const notes = row?.notes || fallback.notes;
+      const dayName = weekdayNameFromIso(iso);
+      const isDefault = !row;
+
+      if (row?._editing) {
+        return `
+          <article class="editor-card" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(row.id || "")}">
+            <div class="editor-head">
+              <div>
+                <h2 class="editor-title">${escapeHtml(dayName)}</h2>
+                <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}</p>
+              </div>
+            </div>
+            <div class="field"><label>Workout type</label><input data-field="workout_type" value="${escapeHtml(workoutType)}" /></div>
+            <div class="field"><label>Exercises</label><textarea data-field="exercises">${escapeHtml(exercises)}</textarea></div>
+            <div class="field"><label>Notes</label><textarea data-field="notes">${escapeHtml(notes)}</textarea></div>
+            <div class="card-actions">
+              <button type="button" class="btn primary" data-action="save-schedule">Save</button>
+              <button type="button" class="btn ghost" data-action="cancel-schedule">Cancel</button>
+              ${row.id ? '<button type="button" class="btn danger" data-action="reset-schedule">Reset to default</button>' : ""}
+            </div>
+          </article>
+        `;
+      }
+
+      return `
+        <article class="editor-card${isDefault ? " is-default" : ""}" data-date="${escapeHtml(iso)}" data-id="${escapeHtml(row?.id || "")}">
+          <div class="editor-head">
+            <div>
+              <h2 class="editor-title">${escapeHtml(dayName)}</h2>
+              <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}${row?.modified ? " · modified" : ""}</p>
+            </div>
+            ${row?.modified ? '<span class="badge">modified</span>' : ""}
+          </div>
+          <div class="card-body">
+            <strong>${escapeHtml(workoutType)}</strong>
+            <div>${escapeHtml(exercises)}</div>
+            ${notes ? `<div><strong>Notes</strong> ${escapeHtml(notes)}</div>` : ""}
+          </div>
+          <div class="card-actions">
+            <button type="button" class="btn" data-action="edit-schedule">Edit</button>
+            ${row?.id ? '<button type="button" class="btn danger" data-action="reset-schedule">Reset to default</button>' : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    let editorDays = [];
+
+    function renderEditor() {
+      editorBody.innerHTML = editorDays
+        .map(({ iso, row }) => renderEditorCard(iso, row))
+        .join("");
+    }
+
+    async function loadEditor() {
+      setPanelLoading("editor", true);
+      try {
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        const end = addDays(start, 13);
+        const startIso = formatIsoDate(start);
+        const endIso = formatIsoDate(end);
+        const rows = await fetchScheduleRange(startIso, endIso);
+        const byDate = mapScheduleByDate(rows);
+        editorDays = [];
+        for (let i = 0; i < 14; i += 1) {
+          const date = addDays(start, i);
+          const iso = formatIsoDate(date);
+          const row = byDate.get(iso) || null;
+          editorDays.push({ iso, row: row ? { ...row, _editing: false } : null });
+        }
+        renderEditor();
+      } catch (err) {
+        editorBody.innerHTML = `<p class="empty">Could not load editor.</p>`;
+        showToast(String(err.message || err), true);
+      } finally {
+        setPanelLoading("editor", false);
+      }
+    }
+
+    async function saveScheduleCard(iso, card) {
+      const payload = {
+        scheduled_date: iso,
+        workout_type: card.querySelector('[data-field="workout_type"]').value.trim(),
+        exercises: card.querySelector('[data-field="exercises"]').value.trim(),
+        notes: card.querySelector('[data-field="notes"]').value.trim(),
+        modified: true,
+        modified_by: "user",
+      };
+      const existingId = card.dataset.id;
+      if (existingId) {
+        await supabaseRequest(`workout_schedule?id=eq.${encodeURIComponent(existingId)}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await supabaseRequest("workout_schedule", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify(payload),
+        });
+      }
+      showToast("Schedule saved.");
+      await loadEditor();
+      if (panels.schedule.classList.contains("active")) await loadSchedule();
+    }
+
+    async function resetScheduleCard(iso, id) {
+      if (id) {
+        await supabaseRequest(`workout_schedule?id=eq.${encodeURIComponent(id)}`, {
+          method: "DELETE",
+          headers: { Prefer: "return=minimal" },
+        });
+      } else {
+        await supabaseRequest(`workout_schedule?scheduled_date=eq.${encodeURIComponent(iso)}`, {
+          method: "DELETE",
+          headers: { Prefer: "return=minimal" },
+        });
+      }
+      showToast("Reset to default program.");
+      await loadEditor();
+      if (panels.schedule.classList.contains("active")) await loadSchedule();
+    }
+
+    function activateTab(name) {
+      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.tab === name));
+      Object.entries(panels).forEach(([key, panel]) => {
+        panel.classList.toggle("active", key === name);
+      });
+      if (name === "schedule") loadSchedule();
+      if (name === "history") loadHistory();
+      if (name === "editor") loadEditor();
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+    });
+
+    historyBody.addEventListener("input", (event) => {
+      if (event.target.id === "historySearch") {
+        historyFilter = event.target.value;
+        renderHistory();
+      }
+    });
+
+    historyBody.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const card = button.closest(".log-card");
+      const id = card?.dataset.id;
+      if (!id) return;
+
+      if (button.dataset.action === "edit-log") {
+        historyRows = historyRows.map((row) => ({
+          ...row,
+          _editing: String(row.id) === String(id),
+        }));
+        renderHistory();
+        return;
+      }
+
+      if (button.dataset.action === "cancel-log") {
+        historyRows = historyRows.map((row) => ({ ...row, _editing: false }));
+        renderHistory();
+        return;
+      }
+
+      if (button.dataset.action === "save-log") {
+        button.disabled = true;
+        try {
+          await saveHistoryRow(id, card);
+        } catch (err) {
+          showToast(String(err.message || err), true);
+        } finally {
+          button.disabled = false;
+        }
+      }
+    });
+
+    editorBody.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const card = button.closest(".editor-card");
+      const iso = card?.dataset.date;
+      if (!iso) return;
+      const id = card.dataset.id || "";
+
+      if (button.dataset.action === "edit-schedule") {
+        editorDays = editorDays.map((entry) => {
+          if (entry.iso !== iso) {
+            if (entry.row) entry.row._editing = false;
+            return entry;
+          }
+          const row = entry.row ? { ...entry.row } : { _editing: true };
+          row._editing = true;
+          return { iso, row };
+        });
+        renderEditor();
+        return;
+      }
+
+      if (button.dataset.action === "cancel-schedule") {
+        editorDays = editorDays.map((entry) => {
+          if (entry.row) entry.row._editing = false;
+          return entry;
+        });
+        renderEditor();
+        return;
+      }
+
+      if (button.dataset.action === "save-schedule") {
+        button.disabled = true;
+        try {
+          await saveScheduleCard(iso, card);
+        } catch (err) {
+          showToast(String(err.message || err), true);
+        } finally {
+          button.disabled = false;
+        }
+        return;
+      }
+
+      if (button.dataset.action === "reset-schedule") {
+        button.disabled = true;
+        try {
+          await resetScheduleCard(iso, id);
+        } catch (err) {
+          showToast(String(err.message || err), true);
+        } finally {
+          button.disabled = false;
+        }
+      }
+    });
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function isTextLike(file) {
+      const name = file.name.toLowerCase();
+      return (
+        file.type.startsWith("text/") ||
+        name.endsWith(".csv") ||
+        name.endsWith(".txt")
+      );
+    }
+
+    function isSpreadsheetOrPdf(file) {
+      const name = file.name.toLowerCase();
+      return (
+        name.endsWith(".pdf") ||
+        name.endsWith(".xlsx") ||
+        name.endsWith(".xls") ||
+        file.type === "application/pdf" ||
+        file.type.includes("spreadsheet") ||
+        file.type.includes("excel")
+      );
+    }
+
+    async function handleFile(file) {
+      if (!file) return;
+      let preview = "";
+      if (isTextLike(file)) {
+        preview = await file.text();
+        uploadPreviewText = preview;
+      } else if (isSpreadsheetOrPdf(file)) {
+        preview = `${file.name}\n${formatFileSize(file.size)}\n\nPreview not available for PDF or Excel in the browser. Send the message to Bennie and attach details in chat if needed.`;
+        uploadPreviewText = "";
+      } else {
+        preview = `${file.name}\n${formatFileSize(file.size)}`;
+        uploadPreviewText = "";
+      }
+      filePreview.hidden = false;
+      filePreview.textContent = preview;
+    }
+
+    dropzone.addEventListener("click", () => fileInput.click());
+    dropzone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+    dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+    dropzone.addEventListener("drop", async (event) => {
+      event.preventDefault();
+      dropzone.classList.remove("dragover");
+      const file = event.dataTransfer?.files?.[0];
+      await handleFile(file);
+    });
+    fileInput.addEventListener("change", async () => {
+      await handleFile(fileInput.files?.[0]);
+      fileInput.value = "";
+    });
+
+    document.getElementById("sendToBennie").addEventListener("click", () => {
+      const base = uploadMessage.value.trim();
+      if (!base) {
+        showToast("Add a message for Bennie first.", true);
+        return;
+      }
+      const parts = [base];
+      if (uploadPreviewText) {
+        parts.push("", "Uploaded plan content:", uploadPreviewText);
+      }
+      const message = parts.join("\n");
+      localStorage.setItem(PENDING_MSG_KEY, message);
+      const short = message.length <= 1200;
+      window.location.href = short
+        ? `index.html?msg=${encodeURIComponent(message)}`
+        : "index.html";
+    });
+
+    const initialTab = window.location.hash.replace("#", "");
+    if (initialTab && panels[initialTab]) {
+      activateTab(initialTab);
+    } else {
+      loadSchedule();
+    }
+  </script>
+</body>
+</html>

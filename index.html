@@ -525,6 +525,7 @@ You have a tool named log_workout_entry. Whenever Will reports completed work wi
 
     const STORAGE_KEY = "anthropic_api_key";
     const WEEK_KEY = "training_week";
+    const PENDING_MSG_KEY = "pending_chat_message";
 
     function loadWeek() {
       const v = localStorage.getItem(WEEK_KEY);
@@ -765,7 +766,19 @@ You have a tool named log_workout_entry. Whenever Will reports completed work wi
 
     weekInput.addEventListener("change", saveWeek);
 
+    function loadPendingMessage() {
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = params.get("msg");
+      let pending = fromUrl != null ? fromUrl : localStorage.getItem(PENDING_MSG_KEY);
+      if (!pending) return;
+      if (fromUrl == null) localStorage.removeItem(PENDING_MSG_KEY);
+      input.value = pending;
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 120) + "px";
+    }
+
     loadWeek();
+    loadPendingMessage();
     const openers = [
       "Hey — what's the move today?",
       "Yo, ready to work?",
