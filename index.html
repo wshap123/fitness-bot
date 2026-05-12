@@ -54,7 +54,7 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(60px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
     }
 
     header {
@@ -141,7 +141,7 @@
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 14px 12px 12px;
+      padding: 14px 12px calc(12px + 60px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -201,7 +201,7 @@
 
     .composer {
       flex-shrink: 0;
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      padding: 10px 12px 10px;
       border-top: 1px solid var(--border);
       background: rgba(250, 247, 242, 0.92);
       backdrop-filter: blur(12px);
@@ -286,10 +286,48 @@
       40% { transform: translateY(-5px); opacity: 1; }
     }
 
+    .bottom-tab-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      max-width: 520px;
+      margin: 0 auto;
+      height: calc(60px + env(safe-area-inset-bottom));
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      display: flex;
+      background: var(--linen);
+      border-top: 1px solid var(--border);
+    }
+
+    .bottom-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-height: 60px;
+      text-decoration: none;
+      color: var(--warm-grey);
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    .bottom-tab.active {
+      color: var(--espresso);
+    }
+
+    .bottom-tab-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
     .toast {
       position: fixed;
       left: 50%;
-      bottom: calc(88px + env(safe-area-inset-bottom));
+      bottom: calc(148px + env(safe-area-inset-bottom));
       transform: translateX(-50%) translateY(12px);
       background: var(--espresso);
       color: #f5f0e8;
@@ -410,6 +448,17 @@
       </div>
     </form>
   </div>
+
+  <nav class="bottom-tab-bar" aria-label="Main navigation">
+    <a href="index.html" class="bottom-tab active" aria-current="page">
+      <span class="bottom-tab-icon" aria-hidden="true">💬</span>
+      <span class="bottom-tab-label">Chat</span>
+    </a>
+    <a href="dashboard.html" class="bottom-tab">
+      <span class="bottom-tab-icon" aria-hidden="true">📊</span>
+      <span class="bottom-tab-label">Dashboard</span>
+    </a>
+  </nav>
 
   <div class="toast" id="toast" role="status"></div>
 
