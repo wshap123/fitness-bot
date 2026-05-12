@@ -53,6 +53,11 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
     button,
     a,
     input,
@@ -65,12 +70,15 @@
     }
 
     .app {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
       height: 100%;
       max-width: 520px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(64px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
     }
 
     header {
@@ -157,14 +165,20 @@
       transform: scale(0.97);
     }
 
-    .messages {
+    .tab-content {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
-      padding: 16px 14px calc(16px + 64px + env(safe-area-inset-bottom));
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--cream);
+    }
+
+    .messages {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      -webkit-overflow-scrolling: touch;
+      padding: 16px 14px;
       background: var(--cream);
     }
 
@@ -305,17 +319,13 @@
       40% { transform: translateY(-5px); opacity: 1; }
     }
 
-    .bottom-tab-bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 40;
-      max-width: 520px;
-      margin: 0 auto;
-      height: calc(64px + env(safe-area-inset-bottom));
-      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    .tab-bar {
+      flex-shrink: 0;
+      position: static;
       display: flex;
+      width: 100%;
+      min-height: 64px;
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       background: var(--cream);
       border-top: 1px solid var(--border);
     }
@@ -485,7 +495,9 @@
       </div>
     </header>
 
-    <div class="messages" id="messages" aria-live="polite"></div>
+    <div class="tab-content">
+      <div class="messages" id="messages" aria-live="polite"></div>
+    </div>
 
     <form class="composer" id="composer">
       <div class="composer-inner">
@@ -493,28 +505,28 @@
         <button type="submit" class="send" id="sendBtn" aria-label="Send">➤</button>
       </div>
     </form>
-  </div>
 
-  <nav class="bottom-tab-bar" aria-label="Main navigation">
-    <a href="index.html" class="bottom-tab active" aria-current="page">
-      <span class="bottom-tab-pill" aria-hidden="true"></span>
-      <span class="bottom-tab-icon" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
-        </svg>
-      </span>
-      <span class="bottom-tab-label">Chat</span>
-    </a>
-    <a href="dashboard.html" class="bottom-tab">
-      <span class="bottom-tab-pill" aria-hidden="true"></span>
-      <span class="bottom-tab-icon" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 20V10M12 20V4M6 20v-6"/>
-        </svg>
-      </span>
-      <span class="bottom-tab-label">Dashboard</span>
-    </a>
-  </nav>
+    <nav class="tab-bar bottom-tab-bar" aria-label="Main navigation">
+      <a href="index.html" class="bottom-tab active" aria-current="page">
+        <span class="bottom-tab-pill" aria-hidden="true"></span>
+        <span class="bottom-tab-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+          </svg>
+        </span>
+        <span class="bottom-tab-label">Chat</span>
+      </a>
+      <a href="dashboard.html" class="bottom-tab">
+        <span class="bottom-tab-pill" aria-hidden="true"></span>
+        <span class="bottom-tab-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 20V10M12 20V4M6 20v-6"/>
+          </svg>
+        </span>
+        <span class="bottom-tab-label">Dashboard</span>
+      </a>
+    </nav>
+  </div>
 
   <div class="toast" id="toast" role="status"></div>
 

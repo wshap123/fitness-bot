@@ -53,6 +53,11 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
     button,
     a,
     input,
@@ -67,12 +72,15 @@
     }
 
     .app {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
       height: 100%;
       max-width: 520px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(64px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
     }
 
     header {
@@ -169,32 +177,30 @@
       box-shadow: 0 1px 4px rgba(30, 22, 16, 0.08);
     }
 
-    .panels {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-      background: var(--cream);
-    }
-
-    .panel {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-      min-height: 0;
-      padding: 12px;
-      padding-bottom: calc(12px + 64px + env(safe-area-inset-bottom));
-      overflow: hidden;
-    }
-
-    .panel.active {
-      display: flex;
-    }
-
-    .panel-body {
+    .tab-content {
       flex: 1;
       min-height: 0;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--cream);
+    }
+
+    .panels {
+      position: relative;
+    }
+
+    .panel {
+      display: none;
+      padding: 12px;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-body {
+      overflow: visible;
     }
 
     .panel-loading {
@@ -693,17 +699,13 @@
       word-break: break-word;
     }
 
-    .bottom-tab-bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 40;
-      max-width: 520px;
-      margin: 0 auto;
-      height: calc(64px + env(safe-area-inset-bottom));
-      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    .tab-bar {
+      flex-shrink: 0;
+      position: static;
       display: flex;
+      width: 100%;
+      min-height: 64px;
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       background: var(--cream);
       border-top: 1px solid var(--border);
     }
@@ -805,7 +807,7 @@
       <button type="button" class="tab" data-tab="upload">Upload</button>
     </nav>
 
-    <div class="panels">
+    <div class="tab-content panels">
       <section class="panel active" id="panel-schedule" aria-labelledby="tab-schedule">
         <div class="panel-loading"><span class="spinner" aria-hidden="true"></span> Loading schedule…</div>
         <div class="panel-body" id="scheduleBody"></div>
@@ -840,9 +842,8 @@
         </div>
       </section>
     </div>
-  </div>
 
-  <nav class="bottom-tab-bar" aria-label="Main navigation">
+    <nav class="tab-bar bottom-tab-bar" aria-label="Main navigation">
     <a href="index.html" class="bottom-tab">
       <span class="bottom-tab-pill" aria-hidden="true"></span>
       <span class="bottom-tab-icon" aria-hidden="true">
@@ -862,6 +863,7 @@
       <span class="bottom-tab-label">Dashboard</span>
     </a>
   </nav>
+  </div>
 
   <div class="toast" id="toast" role="status"></div>
 
