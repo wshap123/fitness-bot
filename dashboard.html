@@ -209,21 +209,23 @@
     }
 
     .week-label {
-      margin: 0 0 12px;
+      margin: 0;
+      padding: 16px 20px 8px;
       font-size: 0.8rem;
-      font-weight: 400;
-      color: var(--ink-muted);
+      font-weight: 500;
+      color: #a89f94;
+      letter-spacing: 0.02em;
     }
 
     .day-card,
     .log-card,
     .editor-card {
       background: #fff;
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      padding: 14px 16px;
+      border: 1px solid #ede6d8;
+      border-radius: 16px;
+      padding: 18px 20px;
       margin-bottom: 10px;
-      box-shadow: 0 2px 8px var(--shadow-soft);
+      box-shadow: 0 2px 12px rgba(30, 22, 16, 0.07);
     }
 
     .day-card:hover,
@@ -250,8 +252,15 @@
     }
 
     .day-title,
-    .log-title,
     .editor-title {
+      margin: 0 0 2px;
+      font-family: "DM Serif Display", serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #1e1610;
+    }
+
+    .log-title {
       margin: 0;
       font-size: 0.9rem;
       font-weight: 600;
@@ -259,8 +268,14 @@
     }
 
     .day-sub,
-    .log-sub,
     .editor-sub {
+      margin: 0 0 12px;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: #a89f94;
+    }
+
+    .log-sub {
       margin: 2px 0 0;
       font-size: 0.8rem;
       font-weight: 400;
@@ -270,35 +285,42 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent-gold);
-      background: var(--accent-gold-dim);
-      border: 1px solid rgba(201, 169, 110, 0.35);
-      border-radius: 999px;
-      padding: 3px 8px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: #c9a96e;
+      background: #fdf5e8;
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      border-radius: 20px;
+      padding: 2px 8px;
       flex-shrink: 0;
     }
 
-    .badge::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-gold);
-    }
-
     .card-body {
-      font-size: 0.88rem;
-      line-height: 1.5;
       white-space: pre-wrap;
     }
 
-    .card-body strong {
-      font-weight: 600;
+    .card-workout-type {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e1610;
+      text-align: left;
+    }
+
+    .card-exercises {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #7a6f65;
+    }
+
+    .card-notes {
+      margin: 8px 0 0;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #7a6f65;
     }
 
     .card-actions {
@@ -441,39 +463,50 @@
     }
 
     .bottom-tab {
-      position: relative;
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
       min-height: 64px;
       text-decoration: none;
-      color: var(--warm-grey);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+      color: #a89f94;
     }
 
     .bottom-tab.active {
-      color: var(--espresso);
+      color: #1e1610;
     }
 
-    .bottom-tab.active::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 4px;
+    .bottom-tab-pill {
+      display: none;
+      width: 20px;
       height: 3px;
+      background: #c9a96e;
       border-radius: 2px;
-      background: var(--accent-gold);
+      margin: 0 auto 6px;
+    }
+
+    .bottom-tab.active .bottom-tab-pill {
+      display: block;
+    }
+
+    .bottom-tab-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
     .bottom-tab-icon {
-      font-size: 1.2rem;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
+    .bottom-tab-icon svg {
+      display: block;
+      width: 24px;
+      height: 24px;
     }
 
     .toast {
@@ -565,11 +598,21 @@
 
   <nav class="bottom-tab-bar" aria-label="Main navigation">
     <a href="index.html" class="bottom-tab">
-      <span class="bottom-tab-icon" aria-hidden="true">💬</span>
+      <span class="bottom-tab-pill" aria-hidden="true"></span>
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+        </svg>
+      </span>
       <span class="bottom-tab-label">Chat</span>
     </a>
     <a href="dashboard.html" class="bottom-tab active" aria-current="page">
-      <span class="bottom-tab-icon" aria-hidden="true">📊</span>
+      <span class="bottom-tab-pill" aria-hidden="true"></span>
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 20V10M12 20V4M6 20v-6"/>
+        </svg>
+      </span>
       <span class="bottom-tab-label">Dashboard</span>
     </a>
   </nav>
@@ -774,12 +817,12 @@
               <h2 class="day-title">${escapeHtml(dayName)}</h2>
               <p class="day-sub">${escapeHtml(formatDisplayDate(iso))}</p>
             </div>
-            ${modified ? '<span class="badge">modified</span>' : ""}
+            ${modified ? '<span class="badge">edited</span>' : ""}
           </div>
           <div class="card-body">
-            <strong>${escapeHtml(workoutType)}</strong>
-            <div>${escapeHtml(exercises)}</div>
-            ${notes ? `<div><strong>Notes</strong> ${escapeHtml(notes)}</div>` : ""}
+            <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
+            <p class="card-exercises">${escapeHtml(exercises)}</p>
+            ${notes ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>` : ""}
           </div>
         </article>
       `;
@@ -960,14 +1003,14 @@
           <div class="editor-head">
             <div>
               <h2 class="editor-title">${escapeHtml(dayName)}</h2>
-              <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}${row?.modified ? " · modified" : ""}</p>
+              <p class="editor-sub">${escapeHtml(formatDisplayDate(iso))}</p>
             </div>
-            ${row?.modified ? '<span class="badge">modified</span>' : ""}
+            ${row?.modified ? '<span class="badge">edited</span>' : ""}
           </div>
           <div class="card-body">
-            <strong>${escapeHtml(workoutType)}</strong>
-            <div>${escapeHtml(exercises)}</div>
-            ${notes ? `<div><strong>Notes</strong> ${escapeHtml(notes)}</div>` : ""}
+            <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
+            <p class="card-exercises">${escapeHtml(exercises)}</p>
+            ${notes ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>` : ""}
           </div>
           <div class="card-actions">
             <button type="button" class="btn" data-action="edit-schedule">Edit</button>

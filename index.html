@@ -321,39 +321,50 @@
     }
 
     .bottom-tab {
-      position: relative;
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
       min-height: 64px;
       text-decoration: none;
-      color: var(--warm-grey);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+      color: #a89f94;
     }
 
     .bottom-tab.active {
-      color: var(--espresso);
+      color: #1e1610;
     }
 
-    .bottom-tab.active::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 4px;
+    .bottom-tab-pill {
+      display: none;
+      width: 20px;
       height: 3px;
+      background: #c9a96e;
       border-radius: 2px;
-      background: var(--accent-gold);
+      margin: 0 auto 6px;
+    }
+
+    .bottom-tab.active .bottom-tab-pill {
+      display: block;
+    }
+
+    .bottom-tab-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
     .bottom-tab-icon {
-      font-size: 1.2rem;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
+    .bottom-tab-icon svg {
+      display: block;
+      width: 24px;
+      height: 24px;
     }
 
     .toast {
@@ -486,11 +497,21 @@
 
   <nav class="bottom-tab-bar" aria-label="Main navigation">
     <a href="index.html" class="bottom-tab active" aria-current="page">
-      <span class="bottom-tab-icon" aria-hidden="true">💬</span>
+      <span class="bottom-tab-pill" aria-hidden="true"></span>
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+        </svg>
+      </span>
       <span class="bottom-tab-label">Chat</span>
     </a>
     <a href="dashboard.html" class="bottom-tab">
-      <span class="bottom-tab-icon" aria-hidden="true">📊</span>
+      <span class="bottom-tab-pill" aria-hidden="true"></span>
+      <span class="bottom-tab-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 20V10M12 20V4M6 20v-6"/>
+        </svg>
+      </span>
       <span class="bottom-tab-label">Dashboard</span>
     </a>
   </nav>
