@@ -229,7 +229,7 @@
       background: #fff;
       border: 1px solid #ede6d8;
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       margin-bottom: 8px;
       box-shadow: 0 2px 12px rgba(30, 22, 16, 0.07);
     }
@@ -255,7 +255,7 @@
     }
 
     .day-title {
-      margin: 0 0 1px;
+      margin: 0;
       font-family: "DM Serif Display", serif;
       font-size: 1.1rem;
       font-weight: 400;
@@ -320,11 +320,38 @@
       color: var(--ink-muted);
     }
 
+    .card-block-divider {
+      border-top: 1px solid var(--border-soft);
+      margin: 8px 0;
+    }
+
+    .card-cardio-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-cardio-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--ink-muted);
+    }
+
+    .card-cardio-text {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+
+    .day-card .field {
+      margin-bottom: 6px;
+    }
+
     .card-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .history-toolbar {
@@ -350,32 +377,69 @@
       color: var(--ink);
     }
 
-    .history-row {
-      padding: 8px 0;
+    .history-col-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 48px 64px 72px;
+      gap: 8px;
+      padding-bottom: 4px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .history-col-header span:nth-child(2),
+    .history-col-header span:nth-child(3) {
+      text-align: center;
+    }
+
+    .history-col-header span:nth-child(4) {
+      text-align: right;
+    }
+
+    .history-row-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
       border-bottom: 1px solid var(--border-soft);
     }
 
-    .history-row:last-child {
+    .history-group .history-row-line:last-child {
       border-bottom: none;
     }
 
-    .history-row-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .history-data-grid {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 1fr 48px 64px 72px;
       gap: 8px;
+      align-items: center;
     }
 
-    .history-exercise {
-      flex: 1;
+    .history-col-exercise {
       min-width: 0;
       font-size: 0.875rem;
       font-weight: 600;
       color: var(--ink);
     }
 
-    .history-stats {
-      flex-shrink: 0;
+    .history-col-sets,
+    .history-col-reps {
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--ink-muted);
+      text-align: center;
+    }
+
+    .history-col-weight {
       font-size: 0.82rem;
       font-weight: 400;
       color: var(--ink-muted);
@@ -390,11 +454,20 @@
       font-size: 0.75rem;
       font-weight: 500;
       cursor: pointer;
-      padding: 0 0 0 8px;
+      padding: 0;
+    }
+
+    .history-row {
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .history-group .history-row:last-child {
+      border-bottom: none;
     }
 
     .history-row-form {
-      padding-top: 8px;
+      padding-top: 6px;
     }
 
     .field {
@@ -763,7 +836,8 @@
       {
         workout_type: "Lower Body Power",
         exercises:
-          "Tonal Squat 3x3–5, KB RDL 3x6–8, Hip Thrust 3x8–10 · MetCon: KB Swing, goblet pulse, Bulgarian split squat · Zone 2 run 25 min",
+          "Tonal Squat 3x3–5, KB RDL 3x6–8, Hip Thrust 3x8–10 · MetCon: KB Swing, goblet pulse, Bulgarian split squat",
+        cardio: "Zone 2 · 25 min",
         notes: "",
       },
       {
@@ -774,7 +848,8 @@
       {
         workout_type: "Upper Push/Pull",
         exercises:
-          "DB Bench 3x4–6, Pull-Ups 3x fail-2, DB OHP 3x6–8 · MetCon: face pull, lateral raise, hammer curl, row · Intervals 25 min",
+          "DB Bench 3x4–6, Pull-Ups 3x fail-2, DB OHP 3x6–8 · MetCon: face pull, lateral raise, hammer curl, row",
+        cardio: "Intervals · 8 × 1 min on / 2 min off",
         notes: "",
       },
       {
@@ -785,7 +860,8 @@
       {
         workout_type: "Full Body Functional",
         exercises:
-          "KB Deadlift, weighted pull-ups, DB bench · MetCon: hip thrust, clean & press, swings, plank-to-push-up · Zone 2 run 20–30 min",
+          "KB Deadlift, weighted pull-ups, DB bench · MetCon: hip thrust, clean & press, swings, plank-to-push-up",
+        cardio: "Zone 2 · 20–30 min",
         notes: "",
       },
       {
@@ -799,6 +875,9 @@
         notes: "",
       },
     ];
+
+    const RUN_ICON =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="M9 20l1-5 2 2 2-5"/><path d="M6 14l1-4 5 1 2-4"/></svg>';
 
     const toastEl = document.getElementById("toast");
     const tabs = document.querySelectorAll(".tab");
@@ -973,11 +1052,50 @@
       return map;
     }
 
+    function scheduleCardioText(row, fallback) {
+      if (row?.cardio != null && String(row.cardio).trim() !== "") {
+        return String(row.cardio).trim();
+      }
+      return fallback.cardio ? String(fallback.cardio).trim() : "";
+    }
+
+    function renderScheduleCardBody(workoutType, exercises, notes, cardio) {
+      const notesHtml = notes
+        ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>`
+        : "";
+      if (cardio) {
+        return `
+          <div class="card-body">
+            <div class="card-strength-block">
+              <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
+              <p class="card-exercises">${escapeHtml(exercises)}</p>
+            </div>
+            <div class="card-block-divider" role="presentation"></div>
+            <div class="card-cardio-block">
+              <div class="card-cardio-row">
+                <span class="card-cardio-icon" aria-hidden="true">${RUN_ICON}</span>
+                <span class="card-cardio-text">${escapeHtml(cardio)}</span>
+              </div>
+            </div>
+            ${notesHtml}
+          </div>
+        `;
+      }
+      return `
+        <div class="card-body">
+          <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
+          <p class="card-exercises">${escapeHtml(exercises)}</p>
+          ${notesHtml}
+        </div>
+      `;
+    }
+
     function renderScheduleDayCard(iso, row) {
       const fallback = defaultForIso(iso);
       const workoutType = row?.workout_type || fallback.workout_type;
       const exercises = row?.exercises || fallback.exercises;
       const notes = row?.notes || fallback.notes;
+      const cardio = scheduleCardioText(row, fallback);
       const isDefault = !row;
       const modified = row?.modified === true;
       const dayName = weekdayNameFromIso(iso);
@@ -1017,11 +1135,7 @@
               <button type="button" class="day-edit-btn" data-action="edit-schedule">Edit</button>
             </div>
           </div>
-          <div class="card-body">
-            <h3 class="card-workout-type">${escapeHtml(workoutType)}</h3>
-            <p class="card-exercises">${escapeHtml(exercises)}</p>
-            ${notes ? `<p class="card-notes"><strong>Notes</strong> ${escapeHtml(notes)}</p>` : ""}
-          </div>
+          ${renderScheduleCardBody(workoutType, exercises, notes, cardio)}
         </article>
       `;
     }
@@ -1081,14 +1195,17 @@
         `;
       }
 
-      const stats = formatLogStats(row);
+      const weight =
+        row.weight_lbs != null && row.weight_lbs !== "" ? String(row.weight_lbs) : "—";
       return `
-        <div class="history-row" data-id="${escapeHtml(row.id)}">
-          <div class="history-row-main">
-            <span class="history-exercise">${escapeHtml(row.exercise || "Exercise")}</span>
-            ${stats ? `<span class="history-stats">${escapeHtml(stats)}</span>` : ""}
-            <button type="button" class="history-edit-link" data-action="edit-log">Edit</button>
+        <div class="history-row-line" data-id="${escapeHtml(row.id)}">
+          <div class="history-data-grid">
+            <span class="history-col-exercise">${escapeHtml(row.exercise || "Exercise")}</span>
+            <span class="history-col-sets">${escapeHtml(row.sets ?? "—")}</span>
+            <span class="history-col-reps">${escapeHtml(row.reps ?? "—")}</span>
+            <span class="history-col-weight">${escapeHtml(weight)}</span>
           </div>
+          <button type="button" class="history-edit-link" data-action="edit-log">Edit</button>
         </div>
       `;
     }
@@ -1115,6 +1232,12 @@
           return `
             <section class="history-group">
               <h3 class="history-day-header">${escapeHtml(header)}</h3>
+              <div class="history-col-header">
+                <span>Exercise</span>
+                <span>Sets</span>
+                <span>Reps</span>
+                <span>Weight</span>
+              </div>
               ${rows.map((row) => renderHistoryRow(row)).join("")}
             </section>
           `;
@@ -1250,7 +1373,7 @@
     historyBody.addEventListener("click", async (event) => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
-      const card = button.closest(".history-row");
+      const card = button.closest(".history-row, .history-row-line");
       const id = card?.dataset.id;
       if (!id) return;
 
